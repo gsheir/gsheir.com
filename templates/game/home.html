@@ -1,0 +1,65 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Home - Women's Euro 2025 Game{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Welcome to the Women's Euro 2025 Game</h1>
+    <p class="mb-3">Welcome, {{ user.username }}! Join leagues and compete with friends by predicting which players will score in each round.</p>
+    
+    {% if current_round %}
+        <div class="alert alert-info">
+            <strong>Current Round:</strong> {{ current_round.name }} (Round {{ current_round.number }})
+        </div>
+    {% endif %}
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3>Quick Actions</h3>
+        <div class="grid" style="gap: 1rem;">
+            <a href="{% url 'game:create_league' %}" class="btn btn-success">Create New League</a>
+            <a href="{% url 'game:join_league' %}" class="btn">Join League</a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>Your Leagues</h3>
+        {% if user_leagues %}
+            <div class="grid" style="gap: 1rem;">
+                {% for participation in user_leagues %}
+                    <div style="padding: 1rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <h4 style="margin-bottom: 0.5rem;">{{ participation.league.name }}</h4>
+                        <p class="text-muted" style="margin-bottom: 0.5rem;">Code: {{ participation.league.code }}</p>
+                        <p class="text-muted" style="margin-bottom: 1rem;">{{ participation.league.participant_count }}/{{ participation.league.max_participants }} participants</p>
+                        <div class="grid" style="gap: 0.5rem;">
+                            <a href="{% url 'game:league' league_id=participation.league.id %}" class="btn">View League</a>
+                            <a href="{% url 'game:selection' league_id=participation.league.id %}" class="btn btn-secondary">Make Selection</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">You haven't joined any leagues yet. Create one or join an existing league to get started!</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3>How to Play</h3>
+    <div class="grid grid-3">
+        <div>
+            <h4>1. Join a League</h4>
+            <p>Create your own league or join one using a league code shared by friends.</p>
+        </div>
+        <div>
+            <h4>2. Select Players</h4>
+            <p>Before each round, select 3 players you think will score. Create a provisional list to automate your selections.</p>
+        </div>
+        <div>
+            <h4>3. Earn Points</h4>
+            <p>Gain 1 point for every goal scored by your selected players. Compete for the top position in your league!</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

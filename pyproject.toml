@@ -1,0 +1,57 @@
+[tool.poetry]
+name = "weuro2025-game"
+version = "0.1.0"
+description = "Women's Euro 2025 prediction game built with Django"
+authors = ["gsheir <gsheir@outlook.com>"]
+readme = "README.md"
+packages = [{include = "game"}, {include = "weuro2025"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django = "^4.2.7"
+psycopg2-binary = "^2.9.7"
+requests = "^2.31.0"
+python-decouple = "^3.8"
+whitenoise = "^6.6.0"
+gunicorn = "^21.2.0"
+django-cors-headers = "^4.3.1"
+dj-database-url = "^2.1.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.0.0"
+isort = "^5.12.0"
+flake8 = "^6.0.0"
+pytest = "^7.4.0"
+pytest-django = "^4.5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+known_django = "django"
+known_first_party = "game,weuro2025"
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "LOCALFOLDER"]

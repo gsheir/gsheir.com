@@ -1,0 +1,102 @@
+{% extends 'game/base.html' %}
+
+{% block title %}{{ league.name }} - Women's Euro 2025 Game{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+            <h1>{{ league.name }}</h1>
+            <p class="text-muted">League Code: <strong>{{ league.code }}</strong></p>
+        </div>
+        <div>
+            <a href="{% url 'game:selection' league_id=league.id %}" class="btn btn-success">Make Selection</a>
+        </div>
+    </div>
+    
+    {% if current_round %}
+        <div class="alert alert-info">
+            <strong>Current Round:</strong> {{ current_round.name }} (Round {{ current_round.number }})
+        </div>
+    {% endif %}
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h3>League Standings</h3>
+        {% if standings %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Player</th>
+                        <th>Round Points</th>
+                        <th>Total Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for standing in standings %}
+                        <tr {% if standing.user == user %}style="background-color: #e3f2fd;"{% endif %}>
+                            <td>{{ standing.position }}</td>
+                            <td>
+                                {{ standing.user.username }}
+                                {% if standing.user == user %}<em>(You)</em>{% endif %}
+                            </td>
+                            <td>{{ standing.points }}</td>
+                            <td><strong>{{ standing.total_points }}</strong></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted">No standings available yet. Wait for the first round to begin!</p>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <h3>Round {{ current_round.number|default:"TBD" }} Selections</h3>
+        {% if user_selections %}
+            {% for user_obj, players in user_selections.items %}
+                <div style="margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #ddd; border-radius: 4px;">
+                    <h4 style="margin-bottom: 0.5rem;">
+                        {{ user_obj.username }}
+                        {% if user_obj == user %}<em>(You)</em>{% endif %}
+                    </h4>
+                    {% if players %}
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            {% for player in players %}
+                                <li style="padding: 0.25rem 0;">
+                                    {{ forloop.counter }}. {{ player.name }} ({{ player.team.name }})
+                                    <span class="text-muted">- {{ player.goals_scored }} goals</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No selections made yet</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No selections have been made for this round yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <h3>League Information</h3>
+    <div class="grid grid-3">
+        <div>
+            <h4>Participants</h4>
+            <p>{{ league.participant_count }} / {{ league.max_participants }}</p>
+        </div>
+        <div>
+            <h4>Created</h4>
+            <p>{{ league.created_at|date:"M d, Y" }}</p>
+        </div>
+        <div>
+            <h4>Created By</h4>
+            <p>{{ league.created_by.username }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

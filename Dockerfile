@@ -1,0 +1,45 @@
+# Use Python 3.11 slim image
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV POETRY_NO_INTERACTION=1
+ENV POETRY_VENV_IN_PROJECT=0
+ENV POETRY_VIRTUALENVS_CREATE=false
+ENV POETRY_CACHE_DIR=/opt/poetry_cache
+
+# Set work directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        postgresql-client \
+        gcc \
+        python3-dev \
+        musl-dev \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency files
+COPY pyproject.toml poetry.lock* requirements.txt ./
+
+# Install dependencies - try Poetry first, fallback to pip
+RUN pip install poetry==1.8.3 && \
+    poetry config virtualenvs.create false && \
+    poetry config virtualenvs.in-project false && \
+    (poetry install --only=main --no-root || pip install -r requirements.txt) && \
+    rm -rf $POETRY_CACHE_DIR
+
+# Copy project
+COPY . /app/
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Expose port
+EXPOSE 8000
+
+# Run gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "weuro2025.wsgi:application"]

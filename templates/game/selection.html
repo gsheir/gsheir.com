@@ -1,0 +1,216 @@
+{% extends 'game/base.html' %}
+
+{% block title %}Selection - {{ league.name }} - Women's Euro 2025 Game{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+            <h1>Player Selection</h1>
+            <p class="text-muted">{{ league.name }} - Round {{ current_round.number|default:"TBD" }}</p>
+        </div>
+        <div>
+            <a href="{% url 'game:league' league_id=league.id %}" class="btn btn-secondary">Back to League</a>
+        </div>
+    </div>
+    
+    {% if current_round %}
+        {% if selection_open %}
+            <div class="alert alert-success">
+                <strong>Selection Window Open</strong><br>
+                Opens: {{ current_round.selection_opens|date:"M d, Y H:i" }}<br>
+                Closes: {{ current_round.selection_closes|date:"M d, Y H:i" }}
+            </div>
+        {% else %}
+            <div class="alert alert-error">
+                <strong>Selection Window Closed</strong><br>
+                The selection window for this round is closed.
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            <strong>No Active Round</strong><br>
+            There is currently no active round for selections.
+        </div>
+    {% endif %}
+</div>
+
+{% if selection_open %}
+<div class="grid grid-2">
+    <div class="card">
+        <h3>Your Provisional Selection List</h3>
+        <p class="text-muted mb-3">Drag and drop players to reorder your preferences. When it's your turn to select, the top 3 available players will be chosen automatically.</p>
+        
+        <div id="provisional-list" style="min-height: 200px; border: 2px dashed #ddd; border-radius: 4px; padding: 1rem;">
+            {% if provisional_selections %}
+                {% for selection in provisional_selections %}
+                    <div class="provisional-item" data-player-id="{{ selection.player.id }}" style="background: #f8f9fa; margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 4px; cursor: move; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>{{ selection.player.name }}</strong> ({{ selection.player.team.name }})<br>
+                            <small class="text-muted">{{ selection.player.position }} - {{ selection.player.goals_scored }} goals</small>
+                        </div>
+                        <button onclick="removeFromProvisional({{ selection.player.id }})" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Remove</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted text-center">No players selected yet. Click on players from the list to add them to your provisional selection.</p>
+            {% endif %}
+        </div>
+        
+        <div class="mt-3">
+            <button onclick="saveProvisionalSelection()" class="btn btn-success">Save Provisional Selection</button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3>All Players</h3>
+        <div style="margin-bottom: 1rem;">
+            <input type="text" id="player-search" class="form-control" placeholder="Search players...">
+        </div>
+        
+        <div id="players-list" style="max-height: 500px; overflow-y: auto;">
+            {% for player in players %}
+                <div class="player-item" data-player-id="{{ player.id }}" 
+                     data-selected="{% if player.id in selected_players %}true{% else %}false{% endif %}"
+                     style="padding: 0.75rem; border-bottom: 1px solid #eee; cursor: pointer; {% if player.id in selected_players %}background-color: #ffebee; opacity: 0.6;{% endif %}"
+                     onclick="{% if player.id not in selected_players %}addToProvisional({{ player.id }}, '{{ player.name|escapejs }}', '{{ player.team.name|escapejs }}', '{{ player.position|escapejs }}', {{ player.goals_scored }}){% endif %}">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong>{{ player.name }}</strong> ({{ player.team.name }})<br>
+                            <small class="text-muted">{{ player.position }} - {{ player.goals_scored }} goals scored</small>
+                        </div>
+                        {% if player.id in selected_players %}
+                            <span style="color: #d32f2f; font-size: 0.8rem;">Already Selected</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+let provisionalPlayers = [];
+const leagueId = '{{ league.id }}';
+const roundId = '{{ current_round.id }}';
+
+// Initialize provisional players from template
+{% if provisional_selections %}
+provisionalPlayers = [
+    {% for selection in provisional_selections %}
+    {
+        id: {{ selection.player.id }},
+        name: '{{ selection.player.name|escapejs }}',
+        team: '{{ selection.player.team.name|escapejs }}',
+        position: '{{ selection.player.position|escapejs }}',
+        goals_scored: {{ selection.player.goals_scored }}
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+{% endif %}
+
+function addToProvisional(playerId, playerName, teamName, position, goalsScored) {
+    // Check if player is already in provisional list
+    if (provisionalPlayers.find(p => p.id === playerId)) {
+        alert('Player is already in your provisional selection.');
+        return;
+    }
+    
+    // Add player to list
+    provisionalPlayers.push({
+        id: playerId,
+        name: playerName,
+        team: teamName,
+        position: position,
+        goals_scored: goalsScored
+    });
+    
+    updateProvisionalDisplay();
+}
+
+function removeFromProvisional(playerId) {
+    provisionalPlayers = provisionalPlayers.filter(p => p.id !== playerId);
+    updateProvisionalDisplay();
+}
+
+function updateProvisionalDisplay() {
+    const container = document.getElementById('provisional-list');
+    
+    if (provisionalPlayers.length === 0) {
+        container.innerHTML = '<p class="text-muted text-center">No players selected yet. Click on players from the list to add them to your provisional selection.</p>';
+        return;
+    }
+    
+    container.innerHTML = provisionalPlayers.map((player, index) => `
+        <div class="provisional-item" data-player-id="${player.id}" style="background: #f8f9fa; margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 4px; cursor: move; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>${player.name}</strong> (${player.team})<br>
+                <small class="text-muted">${player.position} - ${player.goals_scored} goals</small>
+            </div>
+            <button onclick="removeFromProvisional(${player.id})" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Remove</button>
+        </div>
+    `).join('');
+}
+
+function saveProvisionalSelection() {
+    const playerIds = provisionalPlayers.map(p => p.id);
+    
+    fetch('{% url "game:api_provisional_selection" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            league_id: leagueId,
+            round_id: roundId,
+            player_ids: playerIds
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Provisional selection saved successfully!');
+        } else {
+            alert('Error saving selection: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error saving selection.');
+    });
+}
+
+// Player search functionality
+document.getElementById('player-search').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const playerItems = document.querySelectorAll('.player-item');
+    
+    playerItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}
