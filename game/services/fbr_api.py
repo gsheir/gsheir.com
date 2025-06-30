@@ -1,5 +1,7 @@
 import logging
+import time
 
+import pandas as pd
 import requests
 
 from django.conf import settings
@@ -15,10 +17,8 @@ class FBRAPIService:
     def __init__(self):
         self.api_key = None
         self.base_url = settings.FBR_API_BASE_URL
-        self.headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
+        self.generate_api_key()
+        self.headers = {"X-API-Key": self.api_key}
 
     def generate_api_key(self):
         """Generate a new API key for the FBR API"""
@@ -28,253 +28,160 @@ class FBRAPIService:
             self.api_key = response.json().get("api_key")
         except requests.RequestException as e:
             logger.error(f"Error generating API key: {e}")
-            self.api_key = None
 
-    def get_competition_data(self, competition_id="womens-euro-2025"):
-        """Get competition data from FBR API"""
+    def get_teams(self, league_id=162):
+        """Fetch teams for a given competition"""
         try:
-            url = f"{self.base_url}/competitions/{competition_id}"
-            response = requests.get(url, headers=self.headers)
+            url = f"{self.base_url}/league-standings"
+            params = {"league_id": league_id, "season_id": "2025"}
+            response = requests.get(url, headers=self.headers, params=params)
             response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            logger.error(f"Error fetching competition data: {e}")
-            return None
-
-    def get_teams(self, competition_id="womens-euro-2025"):
-        """Get teams from FBR API and sync with database"""
-        try:
-            url = f"{self.base_url}/competitions/{competition_id}/teams"
-            response = requests.get(url, headers=self.headers)
-            response.raise_for_status()
-            data = response.json()
 
             teams = []
-            for team_data in data.get("teams", []):
-                team, created = Team.objects.get_or_create(
-                    fbr_id=team_data.get("id"),
-                    defaults={
-                        "name": team_data.get("name"),
-                        "country": team_data.get("country", team_data.get("name")),
-                    },
-                )
-                teams.append(team)
 
-                if created:
-                    logger.info(f"Created team: {team.name}")
-
+            for table in response.json()["data"]:
+                for standing in table["standings"]:
+                    teams.append(
+                        {
+                            "team_name": standing["team_name"],
+                            "team_id": standing["team_id"],
+                        }
+                    )
+                    logger.info(
+                        f"Fetched team: {standing['team_name']} (ID: {standing['team_id']})"
+                    )
             return teams
 
         except requests.RequestException as e:
             logger.error(f"Error fetching teams: {e}")
             return []
 
-    def get_players(self, competition_id="womens-euro-2025"):
-        """Get players from FBR API and sync with database"""
+    def get_players_on_team(self, team_id):
+        """Fetch players for a specific team. The API is faulty so we scrape
+        directly from the FBRef website.
+
+        Args:
+            team_id (str): The team ID to fetch players for.
+        """
         try:
-            url = f"{self.base_url}/competitions/{competition_id}/players"
-            response = requests.get(url, headers=self.headers)
-            response.raise_for_status()
-            data = response.json()
+            url = f"https://fbref.com/en/squads/{team_id}/"
+            df = pd.read_html(url)
+            time.sleep(6)  # Sleep to avoid hitting the server too fast
 
+            players_df = df[0]
             players = []
-            for player_data in data.get("players", []):
-                # Find team by FBR ID
-                team = None
-                team_id = player_data.get("team_id")
-                if team_id:
-                    try:
-                        team = Team.objects.get(fbr_id=team_id)
-                    except Team.DoesNotExist:
-                        logger.warning(
-                            f"Team with FBR ID {team_id} not found for player {player_data.get('name')}"
-                        )
-                        continue
 
-                if team:
-                    player, created = Player.objects.get_or_create(
-                        fbr_id=player_data.get("id"),
-                        defaults={
-                            "name": player_data.get("name"),
-                            "team": team,
-                            "position": player_data.get("position", "Unknown"),
-                        },
-                    )
-                    players.append(player)
+            for _, row in players_df.iterrows():
+                player = {
+                    "name": row["Unnamed: 0_level_0"]["Player"],
+                    "goals_scored": 0,  # We will calculate tournament goals later
+                }
+                players.append(player)
 
-                    if created:
-                        logger.info(f"Created player: {player.name}")
-
+            logger.info(f"Fetched {len(players)} players for team ID {team_id}")
             return players
 
-        except requests.RequestException as e:
-            logger.error(f"Error fetching players: {e}")
+        except Exception as e:
+            logger.error(f"Error fetching players for team {team_id}: {e}")
             return []
 
-    def get_matches(self, competition_id="womens-euro-2025"):
-        """Get matches from FBR API and sync with database"""
+    def get_matches(self, league_id=162):
+        """Fetch matches for a given league"""
         try:
-            url = f"{self.base_url}/competitions/{competition_id}/matches"
-            response = requests.get(url, headers=self.headers)
+            url = f"{self.base_url}/matches"
+            params = {"league_id": league_id, "season_id": "2025"}
+            response = requests.get(url, headers=self.headers, params=params)
             response.raise_for_status()
-            data = response.json()
 
-            matches = []
-            for match_data in data.get("matches", []):
-                # Find teams
-                home_team = None
-                away_team = None
-
-                home_team_id = match_data.get("home_team_id")
-                away_team_id = match_data.get("away_team_id")
-
-                if home_team_id:
-                    try:
-                        home_team = Team.objects.get(fbr_id=home_team_id)
-                    except Team.DoesNotExist:
-                        logger.warning(
-                            f"Home team with FBR ID {home_team_id} not found"
-                        )
-                        continue
-
-                if away_team_id:
-                    try:
-                        away_team = Team.objects.get(fbr_id=away_team_id)
-                    except Team.DoesNotExist:
-                        logger.warning(
-                            f"Away team with FBR ID {away_team_id} not found"
-                        )
-                        continue
-
-                # Find round
-                round_number = match_data.get("round", 1)
-                round_obj, _ = Round.objects.get_or_create(
-                    number=round_number,
-                    defaults={
-                        "name": f"Round {round_number}",
-                        "selection_opens": match_data.get("kickoff_time"),
-                        "selection_closes": match_data.get("kickoff_time"),
-                        "starts_at": match_data.get("kickoff_time"),
-                        "ends_at": match_data.get("kickoff_time"),
-                    },
-                )
-
-                if home_team and away_team:
-                    match, created = Match.objects.get_or_create(
-                        fbr_id=match_data.get("id"),
-                        defaults={
-                            "round": round_obj,
-                            "home_team": home_team,
-                            "away_team": away_team,
-                            "kickoff_time": match_data.get("kickoff_time"),
-                            "home_score": match_data.get("home_score"),
-                            "away_score": match_data.get("away_score"),
-                            "is_completed": match_data.get("status") == "completed",
-                        },
-                    )
-                    matches.append(match)
-
-                    if created:
-                        logger.info(f"Created match: {match}")
-
+            matches = response.json()["data"]
+            logger.info(f"Fetched {len(matches)} matches for league ID {league_id}")
             return matches
 
         except requests.RequestException as e:
             logger.error(f"Error fetching matches: {e}")
             return []
 
-    def get_match_events(self, match_fbr_id):
-        """Get match events (goals) from FBR API"""
-        try:
-            url = f"{self.base_url}/matches/{match_fbr_id}/events"
-            response = requests.get(url, headers=self.headers)
-            response.raise_for_status()
-            data = response.json()
-
-            goals = []
-            for event in data.get("events", []):
-                if event.get("type") == "goal":
-                    # Find match
-                    try:
-                        match = Match.objects.get(fbr_id=match_fbr_id)
-                    except Match.DoesNotExist:
-                        logger.warning(f"Match with FBR ID {match_fbr_id} not found")
-                        continue
-
-                    # Find player
-                    player_fbr_id = event.get("player_id")
-                    if player_fbr_id:
-                        try:
-                            player = Player.objects.get(fbr_id=player_fbr_id)
-                        except Player.DoesNotExist:
-                            logger.warning(
-                                f"Player with FBR ID {player_fbr_id} not found"
-                            )
-                            continue
-
-                        goal, created = Goal.objects.get_or_create(
-                            match=match,
-                            player=player,
-                            minute=event.get("minute", 0),
-                            defaults={
-                                "is_penalty": event.get("is_penalty", False),
-                                "is_own_goal": event.get("is_own_goal", False),
-                            },
-                        )
-                        goals.append(goal)
-
-                        if created:
-                            logger.info(f"Created goal: {goal}")
-
-            return goals
-
-        except requests.RequestException as e:
-            logger.error(f"Error fetching match events: {e}")
-            return []
-
-    def update_player_goals(self, round_obj):
-        """Update player goal counts for a specific round"""
-        matches = Match.objects.filter(round=round_obj)
-
-        for match in matches:
-            if match.fbr_id:
-                self.get_match_events(match.fbr_id)
-
-        # Update player goal counts
-        for player in Player.objects.all():
-            goal_count = Goal.objects.filter(player=player).count()
-            if player.goals_scored != goal_count:
-                player.goals_scored = goal_count
-                player.save()
-                logger.info(f"Updated {player.name} goal count to {goal_count}")
-
-    def sync_all_data(self, competition_id="womens-euro-2025"):
+    def sync_all_data(self, league_id=162, skip_players=True):
         """Sync all data from FBR API"""
         logger.info("Starting full data sync from FBR API")
 
-        # Sync teams first
-        teams = self.get_teams(competition_id)
-        logger.info(f"Synced {len(teams)} teams")
+        # Sync teams
+        teams = self.get_teams(league_id)
+        for team in teams:
+            Team.objects.update_or_create(
+                name=team["team_name"],
+                country=team["team_name"],
+                fbr_id=team["team_id"],
+            )
+            logger.info(f"Synced team: {team['team_name']}")
 
-        # Sync players
-        players = self.get_players(competition_id)
-        logger.info(f"Synced {len(players)} players")
+            # Sync players
+            if skip_players:
+                logger.info(f"Skipping player sync for team: {team['team_name']}")
+                continue
+
+            players = self.get_players_on_team(team["team_id"])
+            for player in players:
+                if player["name"] in ["Squad Total", "Opponent Total"]:
+                    continue
+
+                Player.objects.update_or_create(
+                    name=player["name"],
+                    team_id=Team.objects.get(fbr_id=team["team_id"]).id,
+                    goals_scored=player["goals_scored"],
+                )
+                logger.info(
+                    f"Synced player: {player['name']} for team {team['team_name']}"
+                )
+
+        # Update rounds
+        for round_data in settings.WEURO_2025_ROUNDS:
+            round_obj, created = Round.objects.update_or_create(
+                number=round_data["number"],
+                defaults={
+                    "name": round_data["name"],
+                    "selection_opens": round_data["selection_opens"],
+                    "selection_closes": round_data["selection_closes"],
+                    "starts_at": round_data["starts_at"],
+                    "ends_at": round_data["ends_at"],
+                    "is_active": round_data.get("is_active", False),
+                    "is_completed": round_data.get("is_completed", False),
+                },
+            )
+            if created:
+                logger.info(f"Created new round: {round_obj.name}")
+            else:
+                logger.info(f"Updated existing round: {round_obj.name}")
 
         # Sync matches
-        matches = self.get_matches(competition_id)
-        logger.info(f"Synced {len(matches)} matches")
-
-        # Sync goals for all matches
+        matches = self.get_matches(league_id)
         for match in matches:
-            if match.fbr_id:
-                goals = self.get_match_events(match.fbr_id)
-                logger.info(f"Synced {len(goals)} goals for {match}")
+            home_team = Team.objects.get(fbr_id=match["home_team_id"])
+            away_team = Team.objects.get(fbr_id=match["away_team_id"])
 
-        # Update player goal counts
-        for player in Player.objects.all():
-            goal_count = Goal.objects.filter(player=player).count()
-            if player.goals_scored != goal_count:
-                player.goals_scored = goal_count
-                player.save()
+            # Time in match["date"] and match["time"] is in CEST, so we need to convert to UTC
+            kickoff_time = f"{match['date']} {match['time']}"
+            kickoff_time = pd.to_datetime(kickoff_time, utc=True).tz_convert(
+                "Europe/Berlin"
+            )
+
+            # Round ID is determined from the timestamp
+            round_id = Round.objects.filter(
+                starts_at__lte=kickoff_time, ends_at__gte=kickoff_time
+            ).first()
+
+            Match.objects.update_or_create(
+                kickoff_time=kickoff_time,
+                is_completed=match["home_team_score"] is not None,
+                home_score=match["home_team_score"],
+                away_score=match["away_team_score"],
+                fbr_id=match["match_id"],
+                home_team=home_team,
+                away_team=away_team,
+                round_id=round_id.id,
+            )
+            logger.info(
+                f"Synced match: {home_team.name} vs {away_team.name} at {kickoff_time}"
+            )
 
         logger.info("Full data sync completed")

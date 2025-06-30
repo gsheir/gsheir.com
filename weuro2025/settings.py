@@ -144,7 +144,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # FBR API settings
 FBR_API_KEY = config("FBR_API_KEY", default="")
-FBR_API_BASE_URL = "https://fbrapi.com/api"
+FBR_API_BASE_URL = "https://fbrapi.com/"
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
@@ -164,3 +164,105 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+# Logging configuration
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "game.services.fbr_api": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "game.management.commands": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
+# Hardcoded football data
+WEURO_2025_ROUNDS = [
+    {
+        "name": "Group Stage Week 1",
+        "number": 1,
+        "selection_opens": "2025-06-01T00:00:00Z",
+        "selection_closes": "2025-07-02T15:00:00Z",
+        "starts_at": "2025-07-02T16:00:00Z",
+        "ends_at": "2025-07-06T15:59:59Z",
+        "is_active": True,
+        "is_completed": False,
+    },
+    {
+        "name": "Group Stage Week 2",
+        "number": 2,
+        "selection_opens": "2025-07-02T16:00:00Z",
+        "selection_closes": "2025-07-06T14:59:59Z",
+        "starts_at": "2025-07-06T16:00:00Z",
+        "ends_at": "2025-07-10T18:59:59Z",
+        "is_active": False,
+        "is_completed": False,
+    },
+    {
+        "name": "Group Stage Week 3",
+        "number": 3,
+        "selection_opens": "2025-07-06T16:00:00Z",
+        "selection_closes": "2025-07-10T17:59:59Z",
+        "starts_at": "2025-07-10T19:00:00Z",
+        "ends_at": "2025-07-16T18:59:59Z",
+        "is_active": False,
+        "is_completed": False,
+    },
+    {
+        "name": "Quarter Finals",
+        "number": 4,
+        "selection_opens": "2025-07-10T19:00:00Z",
+        "selection_closes": "2025-07-16T17:59:59Z",
+        "starts_at": "2025-07-16T19:00:00Z",
+        "ends_at": "2025-07-22T18:59:59Z",
+        "is_active": False,
+        "is_completed": False,
+    },
+    {
+        "name": "Semi Finals",
+        "number": 5,
+        "selection_opens": "2025-07-16T19:00:00Z",
+        "selection_closes": "2025-07-22T17:59:59Z",
+        "starts_at": "2025-07-22T19:00:00Z",
+        "ends_at": "2025-07-27T15:59:59Z",
+        "is_active": False,
+        "is_completed": False,
+    },
+    {
+        "name": "Final",
+        "number": 6,
+        "selection_opens": "2025-07-22T19:00:00Z",
+        "selection_closes": "2025-07-28T14:59:59Z",
+        "starts_at": "2025-07-28T16:00:00Z",
+        "ends_at": "2025-07-28T23:59:59Z",
+        "is_active": False,
+        "is_completed": False,
+    },
+]

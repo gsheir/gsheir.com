@@ -9,8 +9,8 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "--competition",
-            type=str,
-            default="womens-euro-2025",
+            type=int,
+            default=162,
             help="Competition ID to sync",
         )
 
