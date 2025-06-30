@@ -1,0 +1,77 @@
+/* Additional CSS can be added here if needed */
+
+/* Custom selection list styling */
+.sortable-list {
+    min-height: 100px;
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.sortable-list.drag-over {
+    border-color: #3498db;
+    background-color: #f8f9fa;
+}
+
+.player-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.player-card:hover {
+    border-color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+.player-card.selected {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.player-card.unavailable {
+    background-color: #ffebee;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .card {
+        padding: 1rem;
+    }
+    
+    .table {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
