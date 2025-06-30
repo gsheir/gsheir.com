@@ -1,0 +1,126 @@
+<form id="editMatchForm" class="form">
+    <div class="form-group">
+        <label for="home_team">Home Team:</label>
+        <select id="home_team" name="home_team" class="form-control">
+            {% for team in teams %}
+            <option value="{{ team.id }}" {% if team.id == match.home_team.id %}selected{% endif %}>
+                {{ team.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="away_team">Away Team:</label>
+        <select id="away_team" name="away_team" class="form-control">
+            {% for team in teams %}
+            <option value="{{ team.id }}" {% if team.id == match.away_team.id %}selected{% endif %}>
+                {{ team.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="kickoff_time">Kickoff Time:</label>
+        <input type="datetime-local" id="kickoff_time" name="kickoff_time" 
+               value="{{ match.kickoff_time|date:'Y-m-d\TH:i' }}" class="form-control">
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary" onclick="closeSidebar()">Cancel</button>
+    </div>
+</form>
+
+<style>
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+}
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+}
+.btn-primary {
+    background: #007cba;
+    color: white;
+}
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+.btn:hover {
+    opacity: 0.8;
+}
+</style>
+
+<script>
+document.getElementById('editMatchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        home_team_id: document.getElementById('home_team').value,
+        away_team_id: document.getElementById('away_team').value,
+        kickoff_time: document.getElementById('kickoff_time').value,
+    };
+    
+    fetch(`/admin/game/match/edit-match/{{ match.id }}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Match updated successfully!');
+            closeSidebar();
+            location.reload(); // Refresh the page to show changes
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error updating match: ' + error);
+    });
+});
+
+// Get CSRF token function
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>

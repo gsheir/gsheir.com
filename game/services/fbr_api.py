@@ -172,15 +172,27 @@ class FBRAPIService:
                 starts_at__lte=kickoff_time, ends_at__gte=kickoff_time
             ).first()
 
+            # Check if match already exists and is manually edited
+            existing_match = Match.objects.filter(fbr_id=match["match_id"]).first()
+            if existing_match and existing_match.is_manually_edited:
+                logger.info(
+                    f"Skipping manually edited match: {home_team.name} vs {away_team.name}"
+                )
+                continue
+
             Match.objects.update_or_create(
-                kickoff_time=kickoff_time,
-                is_completed=match["home_team_score"] is not None,
-                home_score=match["home_team_score"],
-                away_score=match["away_team_score"],
                 fbr_id=match["match_id"],
-                home_team=home_team,
-                away_team=away_team,
-                round_id=round_id.id,
+                defaults={
+                    "kickoff_time": kickoff_time,
+                    "is_completed": match["home_team_score"] is not None,
+                    "home_score": match["home_team_score"],
+                    "away_score": match["away_team_score"],
+                    "home_team": home_team,
+                    "away_team": away_team,
+                    "round_id": round_id.id,
+                    # Don't override is_manually_edited if it's already True
+                    "is_manually_edited": existing_match.is_manually_edited if existing_match else False,
+                }
             )
             logger.info(
                 f"Synced match: {home_team.name} vs {away_team.name} at {kickoff_time}"

@@ -153,6 +153,10 @@ class Match(models.Model):
     home_score = models.IntegerField(null=True, blank=True)
     away_score = models.IntegerField(null=True, blank=True)
     is_completed = models.BooleanField(default=False)
+    is_manually_edited = models.BooleanField(
+        default=False,
+        help_text="Marks if this match has been manually edited and should be ignored by sync_fbr_data",
+    )
     fbr_id = models.CharField(max_length=50, unique=True, null=True, blank=True)
 
     def __str__(self):

@@ -1,0 +1,464 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+.match-card {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.match-teams {
+    font-weight: bold;
+    font-size: 16px;
+}
+.match-info {
+    font-size: 14px;
+    color: #666;
+}
+.match-actions {
+    display: flex;
+    gap: 10px;
+}
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+.btn-primary {
+    background: #007cba;
+    color: white;
+}
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+.btn:hover {
+    opacity: 0.8;
+}
+.round-section {
+    margin-bottom: 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+}
+.round-title {
+    background: #007cba;
+    color: white;
+    padding: 10px 15px;
+    margin: -20px -20px 20px -20px;
+    border-radius: 7px 7px 0 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+.match-status {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+.status-completed {
+    background: #d4edda;
+    color: #155724;
+}
+.status-upcoming {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+.status-manual {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Sidebar Modal Styles */
+.sidebar-modal {
+    position: fixed;
+    top: 0;
+    right: -500px;
+    width: 500px;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+.sidebar-modal.active {
+    right: 0;
+}
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    display: none;
+}
+.sidebar-overlay.active {
+    display: block;
+}
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+    background: #f8f9fa;
+}
+.sidebar-content {
+    padding: 20px;
+}
+.close-sidebar {
+    float: right;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+{% for round in rounds %}
+<div class="round-section">
+    <div class="round-title">
+        Round {{ round.number }}: {{ round.name }}
+    </div>
+    
+    {% for match in round.matches.all %}
+    <div class="match-card">
+        <div class="match-header">
+            <div>
+                <div class="match-teams">
+                    {{ match.home_team.name }} vs {{ match.away_team.name }}
+                    {% if match.is_completed %}
+                        <span class="match-status status-completed">{{ match.home_score|default:0 }} - {{ match.away_score|default:0 }}</span>
+                    {% endif %}
+                    {% if match.is_manually_edited %}
+                        <span class="match-status status-manual">Manual</span>
+                    {% endif %}
+                </div>
+                <div class="match-info">
+                    {{ match.kickoff_time|date:"M d, Y H:i T" }}
+                    {% if match.is_completed %}
+                        <span class="match-status status-completed">Completed</span>
+                    {% else %}
+                        <span class="match-status status-upcoming">Upcoming</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="match-actions">
+                <button class="btn btn-primary" onclick="editMatch({{ match.id }})">Edit</button>
+                <button class="btn btn-success" onclick="inputResult({{ match.id }})">Input Result</button>
+            </div>
+        </div>
+        
+        {% if match.goals.all %}
+        <div class="match-goals">
+            <strong>Goals:</strong>
+            {% for goal in match.goals.all %}
+                {{ goal.player.name }} {{ goal.minute }}'
+                {% if goal.is_penalty %} (P){% endif %}
+                {% if goal.is_own_goal %} (OG){% endif %}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p>No matches in this round yet.</p>
+    {% endfor %}
+</div>
+{% endfor %}
+
+<!-- Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- Edit Match Sidebar -->
+<div class="sidebar-modal" id="editMatchSidebar">
+    <div class="sidebar-header">
+        <h3>Edit Match</h3>
+        <button class="close-sidebar" onclick="closeSidebar()">&times;</button>
+    </div>
+    <div class="sidebar-content" id="editMatchContent">
+        <!-- Content loaded via AJAX -->
+    </div>
+</div>
+
+<!-- Input Result Sidebar -->
+<div class="sidebar-modal" id="inputResultSidebar">
+    <div class="sidebar-header">
+        <h3>Input Match Result</h3>
+        <button class="close-sidebar" onclick="closeSidebar()">&times;</button>
+    </div>
+    <div class="sidebar-content" id="inputResultContent">
+        <!-- Content loaded via AJAX -->
+    </div>
+</div>
+
+<script>
+function editMatch(matchId) {
+    fetch(`/admin/game/match/edit-match/${matchId}/`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('editMatchContent').innerHTML = html;
+            document.getElementById('sidebarOverlay').classList.add('active');
+            document.getElementById('editMatchSidebar').classList.add('active');
+        });
+}
+
+function inputResult(matchId) {
+    console.log('inputResult function called with matchId:', matchId);
+    
+    // First, fetch player data for this match
+    fetch(`/admin/game/match/input-result/${matchId}/`)
+        .then(response => {
+            console.log('Input result response received:', response.status);
+            return response.text();
+        })
+        .then(html => {
+            console.log('HTML content received, length:', html.length);
+            // Load the content
+            document.getElementById('inputResultContent').innerHTML = html;
+            document.getElementById('sidebarOverlay').classList.add('active');
+            document.getElementById('inputResultSidebar').classList.add('active');
+            
+            console.log('About to fetch player data for matchId:', matchId);
+            // Now fetch player data separately
+            fetchPlayerData(matchId);
+            
+            // Attach form submission handler after content is loaded
+            console.log('Attaching form submission handler');
+            attachFormSubmissionHandler(matchId);
+        })
+        .catch(error => {
+            console.error('Error in inputResult:', error);
+        });
+}
+
+function closeSidebar() {
+    document.getElementById('sidebarOverlay').classList.remove('active');
+    document.getElementById('editMatchSidebar').classList.remove('active');
+    document.getElementById('inputResultSidebar').classList.remove('active');
+}
+
+function fetchPlayerData(matchId) {
+    console.log('fetchPlayerData called with matchId:', matchId);
+    console.log('About to fetch from URL:', `/admin/game/match/player-data/${matchId}/`);
+    
+    fetch(`/admin/game/match/player-data/${matchId}/`)
+        .then(response => {
+            console.log('Player data response status:', response.status);
+            console.log('Player data response ok:', response.ok);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Player data received:', data);
+            window.homeTeamName = data.home_team_name;
+            window.awayTeamName = data.away_team_name;
+            window.homePlayers = data.home_players;
+            window.awayPlayers = data.away_players;
+            
+            console.log('Player data loaded:');
+            console.log('Home team:', window.homeTeamName, 'Players:', window.homePlayers.length);
+            console.log('Away team:', window.awayTeamName, 'Players:', window.awayPlayers.length);
+        })
+        .catch(error => {
+            console.error('Error fetching player data:', error);
+        });
+}
+
+function attachFormSubmissionHandler(matchId) {
+    const form = document.getElementById('inputResultForm');
+    if (!form) {
+        console.error('Form inputResultForm not found');
+        return;
+    }
+    
+    console.log('Form found, attaching event listener');
+    
+    // Remove any existing event listeners
+    form.removeEventListener('submit', handleFormSubmit);
+    
+    // Add new event listener
+    form.addEventListener('submit', function(e) {
+        handleFormSubmit(e, matchId);
+    });
+}
+
+function handleFormSubmit(e, matchId) {
+    console.log('Form submit event triggered for match:', matchId);
+    e.preventDefault();
+    
+    const goalItems = document.querySelectorAll('.goal-item');
+    console.log('Found goal items:', goalItems.length);
+    
+    const goals = [];
+    
+    goalItems.forEach(item => {
+        const playerId = item.querySelector('.goal-player').value;
+        const isOwnGoal = item.querySelector('input[name="is_own_goal"]').checked;
+        
+        console.log('Processing goal item - playerId:', playerId, 'isOwnGoal:', isOwnGoal);
+        
+        if (playerId) {
+            goals.push({
+                player_id: parseInt(playerId),
+                minute: 1, // Default minute since we removed the field
+                is_penalty: false, // Default to false since we removed the field
+                is_own_goal: isOwnGoal
+            });
+        }
+    });
+    
+    console.log('Goals to submit:', goals);
+    
+    if (goals.length === 0) {
+        alert('Please add at least one goal before saving.');
+        return;
+    }
+    
+    const formData = {
+        goals: goals
+    };
+    
+    console.log('Sending POST request to:', `/admin/game/match/input-result/${matchId}/`);
+    console.log('Form data:', JSON.stringify(formData));
+    
+    fetch(`/admin/game/match/input-result/${matchId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        console.log('Response received - status:', response.status, 'ok:', response.ok);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Response data:', data);
+        if (data.success) {
+            alert('Match result updated successfully!');
+            closeSidebar();
+            location.reload(); // Refresh the page to show changes
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('Error updating result: ' + error.message);
+    });
+}
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Global functions for the input result modal
+window.addGoal = function() {
+    console.log('addGoal function called');
+    
+    const goalsList = document.getElementById('goalsList');
+    if (!goalsList) {
+        console.error('goalsList element not found');
+        return;
+    }
+    
+    const homePlayers = window.homePlayers || [];
+    const awayPlayers = window.awayPlayers || [];
+    const homeTeamName = window.homeTeamName || 'Home Team';
+    const awayTeamName = window.awayTeamName || 'Away Team';
+    
+    console.log('Using player data:');
+    console.log('Home team:', homeTeamName, 'Players count:', homePlayers.length);
+    console.log('Away team:', awayTeamName, 'Players count:', awayPlayers.length);
+    console.log('Home players:', homePlayers);
+    console.log('Away players:', awayPlayers);
+    
+    const goalItem = document.createElement('div');
+    goalItem.className = 'goal-item';
+    
+    // Create the player select options
+    let homeTeamOptions = '';
+    let awayTeamOptions = '';
+    
+    if (homePlayers && homePlayers.length > 0) {
+        homePlayers.forEach(player => {
+            homeTeamOptions += `<option value="${player.id}">${player.name}</option>`;
+            console.log('Added home player option:', player.name);
+        });
+    } else {
+        console.warn('No home players found');
+    }
+    
+    if (awayPlayers && awayPlayers.length > 0) {
+        awayPlayers.forEach(player => {
+            awayTeamOptions += `<option value="${player.id}">${player.name}</option>`;
+            console.log('Added away player option:', player.name);
+        });
+    } else {
+        console.warn('No away players found');
+    }
+    
+    console.log('Generated homeTeamOptions:', homeTeamOptions.substring(0, 100) + '...');
+    console.log('Generated awayTeamOptions:', awayTeamOptions.substring(0, 100) + '...');
+    
+    goalItem.innerHTML = `
+        <select name="player" class="form-control goal-player">
+            <option value="">Select player...</option>
+            <optgroup label="Home Team - ${homeTeamName}">
+                ${homeTeamOptions}
+            </optgroup>
+            <optgroup label="Away Team - ${awayTeamName}">
+                ${awayTeamOptions}
+            </optgroup>
+        </select>
+        <label>
+            <input type="checkbox" name="is_own_goal"> Own Goal
+        </label>
+        <button type="button" class="btn btn-danger btn-sm" onclick="removeGoal(this)">Remove</button>
+    `;
+    goalsList.appendChild(goalItem);
+    console.log('Goal item added successfully');
+};
+
+window.removeGoal = function(button) {
+    button.parentElement.remove();
+};
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "admin/index.html" %}
+{% load i18n admin_urls %}
+
+{% block content %}
+{{ block.super }}
+
+<div class="module" style="margin-top: 20px;">
+    <table summary="{% trans 'Custom Management Tools' %}">
+        <caption><a href="#" class="section" title="{% trans 'Show/hide custom management tools' %}">{% trans 'Custom Management Tools' %}</a></caption>
+        <tr class="model-game_match">
+            <th scope="row">
+                <a href="{% url 'admin:game_match_manage' %}">{% trans 'Manage Matches' %}</a>
+            </th>
+            <td>
+                <a href="{% url 'admin:game_match_manage' %}" class="addlink">
+                    {% trans 'Custom match management with edit and result input' %}
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<style>
+.module table caption {
+    background: #417690;
+    color: #fff;
+    text-align: left;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    padding: 8px 16px;
+}
+.module table th {
+    background: #f8f8f8;
+    font-weight: bold;
+    text-align: left;
+    padding: 8px 16px;
+}
+.module table td {
+    background: #fff;
+    padding: 8px 16px;
+    border-bottom: 1px solid #eee;
+}
+.module table tr:hover td {
+    background: #f8f8f8;
+}
+</style>
+{% endblock %}
