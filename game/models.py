@@ -63,6 +63,54 @@ class Round(models.Model):
     def __str__(self):
         return f"Round {self.number}: {self.name}"
 
+    @property
+    def is_selection_open(self):
+        """Check if the selection window is currently open for this round"""
+        from django.utils import timezone
+
+        now = timezone.now()
+        return self.selection_opens <= now <= self.selection_closes
+
+    @property
+    def is_in_progress(self):
+        """Check if this round is currently in progress (matches happening)"""
+        from django.utils import timezone
+
+        now = timezone.now()
+        return self.starts_at <= now <= self.ends_at and not self.is_completed
+
+    @classmethod
+    def get_current_round(cls):
+        """Get the round that is currently in progress"""
+        from django.utils import timezone
+
+        now = timezone.now()
+        return cls.objects.filter(
+            starts_at__lte=now, ends_at__gte=now, is_completed=False
+        ).first()
+
+    @classmethod
+    def get_selection_round(cls):
+        """Get the round that is currently open for selections"""
+        from django.utils import timezone
+
+        now = timezone.now()
+        return cls.objects.filter(
+            selection_opens__lte=now, selection_closes__gte=now
+        ).first()
+
+    @classmethod
+    def get_next_round(cls):
+        """Get the next upcoming round"""
+        from django.utils import timezone
+
+        now = timezone.now()
+        return (
+            cls.objects.filter(starts_at__gt=now, is_completed=False)
+            .order_by("starts_at")
+            .first()
+        )
+
 
 class Team(models.Model):
     """Football teams"""

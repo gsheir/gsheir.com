@@ -19,7 +19,68 @@
             <strong>Current Round:</strong> {{ current_round.name }} (Round {{ current_round.number }})
         </div>
     {% endif %}
+    
+    {% if selection_round %}
+        <div class="alert alert-success">
+            <strong>Selection Open:</strong> {{ selection_round.name }} (Round {{ selection_round.number }})
+            - Selection closes {{ selection_round.selection_closes|date:"M d, Y H:i T" }}
+        </div>
+    {% endif %}
 </div>
+
+<!-- Matches Section -->
+{% if current_matches or next_matches %}
+<div class="grid grid-2">
+    {% if current_matches %}
+    <div class="card">
+        <h3>Current Round Matches</h3>
+        <p class="text-muted">{{ current_round.name }} - Round {{ current_round.number }}</p>
+        {% for match in current_matches %}
+            <div style="padding: 0.75rem; margin-bottom: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-weight: bold;">
+                        {{ match.home_team.name }} vs {{ match.away_team.name }}
+                    </div>
+                    <div style="text-align: right;">
+                        {% if match.is_completed %}
+                            <div style="font-size: 1.2em; font-weight: bold;">
+                                {{ match.home_score|default:"0" }} - {{ match.away_score|default:"0" }}
+                            </div>
+                            <div style="font-size: 0.9em; color: #666;">Final</div>
+                        {% else %}
+                            <div style="font-size: 0.9em; color: #666;">
+                                {{ match.kickoff_time|date:"M d, H:i T" }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if next_matches %}
+    <div class="card">
+        <h3>Next Round Matches</h3>
+        <p class="text-muted">{{ next_round.name }} - Round {{ next_round.number }}</p>
+        {% for match in next_matches %}
+            <div style="padding: 0.75rem; margin-bottom: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-weight: bold;">
+                        {{ match.home_team.name }} vs {{ match.away_team.name }}
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.9em; color: #666;">
+                            {{ match.kickoff_time|date:"M d, H:i T" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endif %}
 
 <div class="grid grid-2">
     <div class="card">

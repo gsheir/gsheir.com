@@ -56,9 +56,11 @@ class HomeView(LoginRequiredMixin, TemplateView):
         ).select_related("league")
         context["user_leagues"] = user_leagues
 
-        # Get current round
-        current_round = Round.objects.filter(is_active=True).first()
+        # Get current round and selection round
+        current_round = Round.get_current_round()
+        selection_round = Round.get_selection_round()
         context["current_round"] = current_round
+        context["selection_round"] = selection_round
 
         return context
 
@@ -144,22 +146,50 @@ class LeagueView(LoginRequiredMixin, TemplateView):
 
         context["league"] = league
 
-        # Get current round
-        current_round = Round.objects.filter(is_active=True).first()
-        context["current_round"] = current_round
+        # Get current round (in progress) and selection round (open for selections)
+        current_round = Round.get_current_round()
+        selection_round = Round.get_selection_round()
+        next_round = Round.get_next_round()
 
-        # Get league standings for current round
+        context["current_round"] = current_round
+        context["selection_round"] = selection_round
+        context["next_round"] = next_round
+
+        # Get matches for current round (if any)
         if current_round:
+            current_matches = (
+                current_round.matches.all()
+                .select_related("home_team", "away_team")
+                .order_by("kickoff_time")
+            )
+            context["current_matches"] = current_matches
+
+        # Get matches for next round (if any)
+        if next_round:
+            next_matches = (
+                next_round.matches.all()
+                .select_related("home_team", "away_team")
+                .order_by("kickoff_time")
+            )
+            context["next_matches"] = next_matches
+
+        # For standings and selections, use the most recent completed round or current round
+        standings_round = (
+            current_round
+            or Round.objects.filter(is_completed=True).order_by("-number").first()
+        )
+        if standings_round:
+            # Get league standings for the round
             standings = (
-                LeagueStanding.objects.filter(league=league, round=current_round)
+                LeagueStanding.objects.filter(league=league, round=standings_round)
                 .select_related("user")
                 .order_by("-total_points", "user__username")
             )
             context["standings"] = standings
 
-            # Get user selections for current round
+            # Get user selections for the round
             selections = (
-                UserSelection.objects.filter(league=league, round=current_round)
+                UserSelection.objects.filter(league=league, round=standings_round)
                 .select_related("user", "player")
                 .order_by("user__username", "selection_order")
             )
@@ -193,19 +223,16 @@ class SelectionView(LoginRequiredMixin, TemplateView):
 
         context["league"] = league
 
-        # Get current round
-        current_round = Round.objects.filter(is_active=True).first()
-        if not current_round:
-            messages.error(self.request, "No active round.")
+        # Get the round that's open for selection
+        selection_round = Round.get_selection_round()
+        if not selection_round:
+            messages.error(self.request, "No round is currently open for selections.")
             return context
 
-        context["current_round"] = current_round
+        context["current_round"] = selection_round
 
         # Check if selection is still open
-        now = timezone.now()
-        selection_open = (
-            current_round.selection_opens <= now <= current_round.selection_closes
-        )
+        selection_open = selection_round.is_selection_open
         context["selection_open"] = selection_open
 
         # Get all players
@@ -219,7 +246,7 @@ class SelectionView(LoginRequiredMixin, TemplateView):
         # Get user's provisional selections
         provisional_selections = (
             ProvisionalSelection.objects.filter(
-                user=self.request.user, league=league, round=current_round
+                user=self.request.user, league=league, round=selection_round
             )
             .select_related("player")
             .order_by("priority")
@@ -228,7 +255,7 @@ class SelectionView(LoginRequiredMixin, TemplateView):
 
         # Get already selected players in this league/round (by all users)
         selected_players = UserSelection.objects.filter(
-            league=league, round=current_round
+            league=league, round=selection_round
         ).values_list("player_id", flat=True)
         context["selected_players"] = list(selected_players)
 
@@ -256,7 +283,7 @@ class ProvisionalSelectionAPIView(LoginRequiredMixin, View):
             player_ids = data.get("player_ids", [])
 
             league = get_object_or_404(League, id=league_id)
-            current_round = get_object_or_404(Round, id=round_id)
+            selection_round = get_object_or_404(Round, id=round_id)
 
             # Check if user is in league
             if not LeagueParticipant.objects.filter(
@@ -265,15 +292,12 @@ class ProvisionalSelectionAPIView(LoginRequiredMixin, View):
                 return JsonResponse({"error": "Not authorized"}, status=403)
 
             # Check if selection is still open
-            now = timezone.now()
-            if not (
-                current_round.selection_opens <= now <= current_round.selection_closes
-            ):
+            if not selection_round.is_selection_open:
                 return JsonResponse({"error": "Selection window is closed"}, status=400)
 
             # Clear existing provisional selections
             ProvisionalSelection.objects.filter(
-                user=request.user, league=league, round=current_round
+                user=request.user, league=league, round=selection_round
             ).delete()
 
             # Create new provisional selections
@@ -284,7 +308,7 @@ class ProvisionalSelectionAPIView(LoginRequiredMixin, View):
                     ProvisionalSelection.objects.create(
                         user=request.user,
                         league=league,
-                        round=current_round,
+                        round=selection_round,
                         player=player,
                         priority=i + 1,
                     )

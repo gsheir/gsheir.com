@@ -159,10 +159,12 @@ class FBRAPIService:
             home_team = Team.objects.get(fbr_id=match["home_team_id"])
             away_team = Team.objects.get(fbr_id=match["away_team_id"])
 
-            # Time in match["date"] and match["time"] is in CEST, so we need to convert to UTC
+            # Time in data is in CEST, so we need to convert to UTC
             kickoff_time = f"{match['date']} {match['time']}"
-            kickoff_time = pd.to_datetime(kickoff_time, utc=True).tz_convert(
-                "Europe/Berlin"
+            kickoff_time = (
+                pd.to_datetime(kickoff_time)
+                .tz_localize(tz="Europe/Berlin")
+                .tz_convert(tz="UTC")
             )
 
             # Round ID is determined from the timestamp
