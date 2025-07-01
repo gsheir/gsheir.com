@@ -9,6 +9,9 @@ ENV POETRY_VENV_IN_PROJECT=0
 ENV POETRY_VIRTUALENVS_CREATE=false
 ENV POETRY_CACHE_DIR=/opt/poetry_cache
 
+# Declare environment variables for Railway
+ARG CSRF_TRUSTED_ORIGINS
+
 # Set work directory
 WORKDIR /app
 
