@@ -40,7 +40,7 @@ RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
 # Collect static files (with database URL placeholder for Railway)
-RUN DATABASE_URL=postgres://user:pass@localhost/db python manage.py collectstatic --noinput
+RUN DATABASE_URL python manage.py collectstatic --noinput
 
 # Expose port (Railway will set PORT environment variable)
 EXPOSE 8000

@@ -156,7 +156,6 @@ LOGIN_REDIRECT_URL = "/weuro2025_game/"
 LOGOUT_REDIRECT_URL = "/"
 
 # FBR API settings
-FBR_API_KEY = config("FBR_API_KEY", default="")
 FBR_API_BASE_URL = "https://fbrapi.com/"
 
 # CORS settings

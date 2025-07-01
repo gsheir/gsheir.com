@@ -38,11 +38,14 @@ FBR_API_KEY=your-fbr-api-key-here
 RAILWAY_ENVIRONMENT=production
 ```
 
-**Important**: Generate a strong `SECRET_KEY` for production. You can use:
-```python
-from django.core.management.utils import get_random_secret_key
-print(get_random_secret_key())
-```
+**Important**: 
+- Generate a strong `SECRET_KEY` for production. You can use:
+  ```python
+  from django.core.management.utils import get_random_secret_key
+  print(get_random_secret_key())
+  ```
+- Do NOT set the PostgreSQL database variables (`POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`) in Railway - these are only for local Docker development
+- Railway will automatically provide `DATABASE_URL` when you add the PostgreSQL service
 
 ### 5. Deploy
 - Railway will automatically deploy when you push to your main branch
