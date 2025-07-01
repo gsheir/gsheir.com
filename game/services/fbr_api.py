@@ -101,7 +101,7 @@ class FBRAPIService:
             logger.error(f"Error fetching matches: {e}")
             return []
 
-    def sync_all_data(self, league_id=162, skip_players=True):
+    def sync_all_data(self, league_id=162, skip_players=False):
         """Sync all data from FBR API"""
         logger.info("Starting full data sync from FBR API")
 
