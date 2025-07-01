@@ -2,7 +2,7 @@ services:
   web:
     build: .
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file:
       - .env
     environment:
@@ -19,7 +19,7 @@ services:
              echo 'Waiting for database...' &&
              poetry run python manage.py makemigrations &&
              poetry run python manage.py migrate &&
-             poetry run python manage.py runserver 0.0.0.0:8000"
+             poetry run python manage.py runserver 0.0.0.0:8080"
 
   db:
     image: postgres:15
