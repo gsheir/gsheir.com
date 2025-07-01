@@ -191,8 +191,10 @@ class FBRAPIService:
                     "away_team": away_team,
                     "round_id": round_id.id,
                     # Don't override is_manually_edited if it's already True
-                    "is_manually_edited": existing_match.is_manually_edited if existing_match else False,
-                }
+                    "is_manually_edited": (
+                        existing_match.is_manually_edited if existing_match else False
+                    ),
+                },
             )
             logger.info(
                 f"Synced match: {home_team.name} vs {away_team.name} at {kickoff_time}"

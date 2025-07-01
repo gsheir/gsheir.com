@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('game', '0001_initial'),
+        ("game", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='match',
-            name='is_manually_edited',
-            field=models.BooleanField(default=False, help_text='Marks if this match has been manually edited and should be ignored by sync_fbr_data'),
+            model_name="match",
+            name="is_manually_edited",
+            field=models.BooleanField(
+                default=False,
+                help_text="Marks if this match has been manually edited and should be ignored by sync_fbr_data",
+            ),
         ),
     ]
