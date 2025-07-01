@@ -49,8 +49,5 @@ RUN poetry run python manage.py collectstatic --noinput
 # Expose port (Railway will set PORT environment variable)
 EXPOSE 8080
 
-# Make setup.sh executable and run script
-RUN chmod +x /app/setup.sh && /app/setup.sh
-
-# Start gunicorn
-ENTRYPOINT ["sh", "-c", "gunicorn weuro2025.wsgi:application"]
+# Run migrations and start gunicorn
+ENTRYPOINT ["sh", "-c", "python manage.py migrate && gunicorn --bind [::]:${PORT:-8000} weuro2025.wsgi:application" ] 
