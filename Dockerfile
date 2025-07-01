@@ -48,11 +48,8 @@ RUN poetry run python manage.py collectstatic --noinput
 # Expose port (Railway will set PORT environment variable)
 EXPOSE 8080
 
-# Run migrations 
-RUN poetry run python manage.py migrate 
-
-# Run FBRef sync to initialise database
-RUN poetry run python manage.py sync_fbr_data
+# Make setup.sh executable and run script
+RUN chmod +x /app/setup.sh && /app/setup.sh
 
 # Start gunicorn
 ENTRYPOINT ["sh", "-c", "gunicorn weuro2025.wsgi:application"]
