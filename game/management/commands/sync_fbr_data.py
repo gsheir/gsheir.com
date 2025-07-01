@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from game.services.fbr_api import FBRAPIService
+
 
 class Command(BaseCommand):
     help = "Sync data from FBR API"
@@ -15,8 +17,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         competition_id = options["competition"]
-        
-        self.stdout.write(f"Database connection: {self.db.connection.settings_dict['NAME']}")
+
+        self.stdout.write(f"Database connection: {settings.DATABASES['default']}")
         self.stdout.write(f"Starting sync for competition: {competition_id}")
 
         fbr_service = FBRAPIService()

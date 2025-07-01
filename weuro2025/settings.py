@@ -93,9 +93,10 @@ WSGI_APPLICATION = "weuro2025.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     "default": dj_database_url.config(
-        default=config("DATABASE_URL", default="sqlite:///db.sqlite3"),
+        default=config("DATABASE_URL"),
         conn_max_age=600,
         conn_health_checks=True,
     )
