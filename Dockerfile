@@ -51,7 +51,7 @@ EXPOSE 8000
 RUN python manage.py migrate 
 
 # Run FBRef sync to initialise database
-RUN python manage.py sync_fbref_data
+RUN python manage.py sync_fbr_data
 
 # Start gunicorn
 CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-8000} weuro2025.wsgi:application"]
