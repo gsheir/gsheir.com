@@ -11,6 +11,7 @@ ENV POETRY_CACHE_DIR=/opt/poetry_cache
 
 # Declare environment variables for Railway
 ARG CSRF_TRUSTED_ORIGINS
+ARG DATABASE_URL
 
 # Set work directory
 WORKDIR /app
