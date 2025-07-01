@@ -43,7 +43,7 @@ COPY . /app/
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-# Collect static files (with dummy database URL since we don't need DB for static files)
+# Collect static files 
 RUN poetry run python manage.py collectstatic --noinput
 
 # Expose port (Railway will set PORT environment variable)
