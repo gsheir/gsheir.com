@@ -47,5 +47,11 @@ RUN DJANGO_SETTINGS_MODULE=weuro2025.settings \
 # Expose port (Railway will set PORT environment variable)
 EXPOSE 8000
 
-# Run migrations and start gunicorn
-CMD ["sh", "-c", "python manage.py migrate && gunicorn --bind 0.0.0.0:${PORT:-8000} weuro2025.wsgi:application"]
+# Run migrations 
+RUN python manage.py migrate 
+
+# Run FBRef sync to initialise database
+RUN python manage.py sync_fbref_data
+
+# Start gunicorn
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-8000} weuro2025.wsgi:application"]
