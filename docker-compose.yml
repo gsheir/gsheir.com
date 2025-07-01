@@ -1,6 +1,8 @@
 services:
   web:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile.web
     ports:
       - "8080:8080"
     env_file:
@@ -8,18 +10,34 @@ services:
     environment:
       - POETRY_VENV_IN_PROJECT=0
       - POETRY_VIRTUALENVS_CREATE=false
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8080
     depends_on:
       db:
         condition: service_healthy
     volumes:
       - .:/app
       - /app/.venv  # Exclude .venv directory from volume mount
-    command: >
-      sh -c "poetry install --only=main &&
-             echo 'Waiting for database...' &&
-             poetry run python manage.py makemigrations &&
-             poetry run python manage.py migrate &&
-             poetry run python manage.py runserver 0.0.0.0:8080"
+    
+  sync_service:
+    build: 
+      context: .
+      dockerfile: Dockerfile.sync_service
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - web
+    
+  round_processor:
+    build: 
+      context: .
+      dockerfile: Dockerfile.round_processor
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - web
+    
 
   db:
     image: postgres:15

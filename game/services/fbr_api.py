@@ -173,7 +173,12 @@ class FBRAPIService:
             ).first()
 
             # Check if match already exists and is manually edited
-            existing_match = Match.objects.filter(fbr_id=match["match_id"]).first()
+            existing_match = Match.objects.filter(
+                fbr_id=match["match_id"],
+                home_team=home_team,
+                away_team=away_team,
+                kickoff_time=kickoff_time,
+                ).first()
             if existing_match and existing_match.is_manually_edited:
                 logger.info(
                     f"Skipping manually edited match: {home_team.name} vs {away_team.name}"
