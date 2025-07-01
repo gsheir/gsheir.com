@@ -39,11 +39,13 @@ COPY . /app/
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-# Collect static files (with database URL placeholder for Railway)
-RUN DATABASE_URL python manage.py collectstatic --noinput
+# Collect static files (with dummy database URL since we don't need DB for static files)
+RUN DJANGO_SETTINGS_MODULE=weuro2025.settings \
+    DATABASE_URL=sqlite:///tmp/dummy.db \
+    python manage.py collectstatic --noinput
 
 # Expose port (Railway will set PORT environment variable)
 EXPOSE 8000
 
 # Run migrations and start gunicorn
-CMD python manage.py migrate && gunicorn --bind 0.0.0.0:${PORT:-8000} weuro2025.wsgi:application
+CMD ["sh", "-c", "python manage.py migrate && gunicorn --bind 0.0.0.0:${PORT:-8000} weuro2025.wsgi:application"]
