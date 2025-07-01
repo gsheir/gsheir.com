@@ -27,6 +27,19 @@ DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",")
 
+# Railway-specific settings
+RAILWAY_STATIC_URL = config("RAILWAY_STATIC_URL", default="")
+RAILWAY_ENVIRONMENT = config("RAILWAY_ENVIRONMENT", default="")
+
+# Add Railway domains to allowed hosts
+if RAILWAY_ENVIRONMENT:
+    ALLOWED_HOSTS.extend([
+        f"*.up.railway.app",
+        f"*.railway.app", 
+        "gsheir.com",
+        "www.gsheir.com"
+    ])
+
 # Application definition
 DJANGO_APPS = [
     "django.contrib.admin",

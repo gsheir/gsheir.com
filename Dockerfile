@@ -35,11 +35,15 @@ RUN pip install poetry==1.8.3 && \
 # Copy project
 COPY . /app/
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+# Create a non-root user
+RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
+USER appuser
 
-# Expose port
+# Collect static files (with database URL placeholder for Railway)
+RUN DATABASE_URL=postgres://user:pass@localhost/db python manage.py collectstatic --noinput
+
+# Expose port (Railway will set PORT environment variable)
 EXPOSE 8000
 
-# Run gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "weuro2025.wsgi:application"]
+# Run migrations and start gunicorn
+CMD python manage.py migrate && gunicorn --bind 0.0.0.0:${PORT:-8000} weuro2025.wsgi:application

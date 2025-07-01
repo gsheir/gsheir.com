@@ -135,43 +135,28 @@ class MatchAdmin(admin.ModelAdmin):
     
     def input_result_view(self, request, match_id):
         """View for inputting match results"""
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.info(f"Input result view called for match_id: {match_id}, method: {request.method}")
-        
         match = get_object_or_404(Match, id=match_id)
         
         if request.method == 'POST':
             try:
-                logger.info(f"Processing POST request, body: {request.body}")
                 data = json.loads(request.body)
-                logger.info(f"Parsed JSON data: {data}")
                 
                 # Clear existing goals
-                existing_goals_count = match.goals.all().count()
-                logger.info(f"Clearing {existing_goals_count} existing goals")
                 match.goals.all().delete()
                 
                 # Add new goals
                 home_goals = 0
                 away_goals = 0
                 
-                goals_data = data.get('goals', [])
-                logger.info(f"Processing {len(goals_data)} goals")
-                
-                for i, goal_data in enumerate(goals_data):
-                    logger.info(f"Processing goal {i}: {goal_data}")
+                for goal_data in data.get('goals', []):
                     player = Player.objects.get(id=goal_data['player_id'])
-                    logger.info(f"Found player: {player.name} (team: {player.team.name})")
-                    
-                    goal = Goal.objects.create(
+                    Goal.objects.create(
                         match=match,
                         player=player,
                         minute=goal_data['minute'],
                         is_penalty=goal_data.get('is_penalty', False),
                         is_own_goal=goal_data.get('is_own_goal', False)
                     )
-                    logger.info(f"Created goal: {goal}")
                     
                     # Count goals for each team
                     if goal_data.get('is_own_goal'):
@@ -187,27 +172,20 @@ class MatchAdmin(admin.ModelAdmin):
                         else:
                             away_goals += 1
                 
-                logger.info(f"Final score: {match.home_team.name} {home_goals} - {away_goals} {match.away_team.name}")
-                
                 # Update scores and mark as completed
                 match.home_score = home_goals
                 match.away_score = away_goals
                 match.is_completed = True
                 match.is_manually_edited = True
                 match.save()
-                logger.info(f"Match saved: {match}")
                 
                 # Update player goal counts
                 for player in Player.objects.filter(goals__match=match):
-                    old_count = player.goals_scored
                     player.goals_scored = player.goals.filter(is_own_goal=False).count()
                     player.save()
-                    logger.info(f"Updated player {player.name} goals from {old_count} to {player.goals_scored}")
                 
-                logger.info("Successfully updated match result")
                 return JsonResponse({'success': True, 'message': 'Match result updated successfully'})
             except Exception as e:
-                logger.error(f"Error updating match result: {str(e)}", exc_info=True)
                 return JsonResponse({'success': False, 'error': str(e)})
         
         home_players = Player.objects.filter(team=match.home_team)
@@ -224,30 +202,18 @@ class MatchAdmin(admin.ModelAdmin):
     
     def player_data_view(self, request, match_id):
         """Return player data for a match as JSON"""
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.info(f"Player data view called for match_id: {match_id}")
-        
         match = get_object_or_404(Match, id=match_id)
-        logger.info(f"Match found: {match.home_team.name} vs {match.away_team.name}")
         
         home_players = Player.objects.filter(team=match.home_team).values('id', 'name')
         away_players = Player.objects.filter(team=match.away_team).values('id', 'name')
         
-        home_players_list = list(home_players)
-        away_players_list = list(away_players)
-        
-        logger.info(f"Home players count: {len(home_players_list)}")
-        logger.info(f"Away players count: {len(away_players_list)}")
-        
         data = {
             'home_team_name': match.home_team.name,
             'away_team_name': match.away_team.name,
-            'home_players': home_players_list,
-            'away_players': away_players_list,
+            'home_players': list(home_players),
+            'away_players': list(away_players),
         }
         
-        logger.info(f"Returning data: {data}")
         return JsonResponse(data)
 
 
