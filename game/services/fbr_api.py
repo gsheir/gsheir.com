@@ -19,7 +19,31 @@ class FBRAPIService:
         self.base_url = settings.FBR_API_BASE_URL
         self.generate_api_key()
         self.headers = {"X-API-Key": self.api_key}
+        
+        while not self.check_required_tables():
+            logger.error("Required tables are missing. Retrying in 10 seconds...")
+            time.sleep(10)
+            
 
+    def check_required_tables(self):
+        """Check if required tables exist in the database"""
+        required_tables = [
+            "game_team",
+            "game_player",
+            "game_match",
+            "game_round",
+            "game_goal",
+        ]
+        existing_tables = set(
+            table.name for table in settings.DATABASES["default"]["OPTIONS"]["tables"]
+        )
+        missing_tables = set(required_tables) - existing_tables
+
+        if missing_tables:
+            logger.error(f"Missing required tables: {', '.join(missing_tables)}")
+            return False
+        return True
+    
     def generate_api_key(self):
         """Generate a new API key for the FBR API"""
         try:
@@ -55,6 +79,7 @@ class FBRAPIService:
         except requests.RequestException as e:
             logger.error(f"Error fetching teams: {e}")
             return []
+        
 
     def get_players_on_team(self, team_id):
         """Fetch players for a specific team. The API is faulty so we scrape
@@ -101,7 +126,7 @@ class FBRAPIService:
             logger.error(f"Error fetching matches: {e}")
             return []
 
-    def sync_all_data(self, league_id=162, skip_players=False):
+    def sync_all_data(self, league_id=162):
         """Sync all data from FBR API"""
         logger.info("Starting full data sync from FBR API")
 
@@ -115,24 +140,17 @@ class FBRAPIService:
             )
             logger.info(f"Synced team: {team['team_name']}")
 
-            # Sync players
-            if skip_players:
-                logger.info(f"Skipping player sync for team: {team['team_name']}")
-                continue
-
-            players = self.get_players_on_team(team["team_id"])
-            for player in players:
-                if player["name"] in ["Squad Total", "Opponent Total"]:
-                    continue
-
-                Player.objects.update_or_create(
-                    name=player["name"],
-                    team_id=Team.objects.get(fbr_id=team["team_id"]).id,
-                    goals_scored=player["goals_scored"],
-                )
-                logger.info(
-                    f"Synced player: {player['name']} for team {team['team_name']}"
-                )
+        for player in settings.WEURO_2025_PLAYERS:
+            Player.objects.update_or_create(
+                name=player["name"],
+                team_id=Team.objects.get(name=player["team"]).id,
+                defaults={
+                    "goals_scored": 0  # Initialize goals scored to 0
+                },
+            )
+            logger.info(
+                f"Synced player: {player['name']} for team {player['team']}"
+            )
 
         # Update rounds
         for round_data in settings.WEURO_2025_ROUNDS:
