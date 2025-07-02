@@ -20,29 +20,29 @@ class FBRAPIService:
         self.generate_api_key()
         self.headers = {"X-API-Key": self.api_key}
         
-        while not self.check_required_tables():
-            logger.error("Required tables are missing. Retrying in 10 seconds...")
-            time.sleep(10)
+        # while not self.check_required_tables():
+        #     logger.error("Required tables are missing. Retrying in 10 seconds...")
+        #     time.sleep(10)
             
 
-    def check_required_tables(self):
-        """Check if required tables exist in the database"""
-        required_tables = [
-            "game_team",
-            "game_player",
-            "game_match",
-            "game_round",
-            "game_goal",
-        ]
-        existing_tables = set(
-            table.name for table in settings.DATABASES["default"]["OPTIONS"]["tables"]
-        )
-        missing_tables = set(required_tables) - existing_tables
+    # def check_required_tables(self):
+    #     """Check if required tables exist in the database"""
+    #     required_tables = [
+    #         "game_team",
+    #         "game_player",
+    #         "game_match",
+    #         "game_round",
+    #         "game_goal",
+    #     ]
+    #     existing_tables = set(
+    #         table.name for table in settings.DATABASES["default"]["OPTIONS"]["tables"]
+    #     )
+    #     missing_tables = set(required_tables) - existing_tables
 
-        if missing_tables:
-            logger.error(f"Missing required tables: {', '.join(missing_tables)}")
-            return False
-        return True
+    #     if missing_tables:
+    #         logger.error(f"Missing required tables: {', '.join(missing_tables)}")
+    #         return False
+    #     return True
     
     def generate_api_key(self):
         """Generate a new API key for the FBR API"""
