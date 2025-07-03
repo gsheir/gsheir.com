@@ -20,6 +20,29 @@ class FBRAPIService:
         self.generate_api_key()
         self.headers = {"X-API-Key": self.api_key}
 
+        # while not self.check_required_tables():
+        #     logger.error("Required tables are missing. Retrying in 10 seconds...")
+        #     time.sleep(10)
+
+    # def check_required_tables(self):
+    #     """Check if required tables exist in the database"""
+    #     required_tables = [
+    #         "game_team",
+    #         "game_player",
+    #         "game_match",
+    #         "game_round",
+    #         "game_goal",
+    #     ]
+    #     existing_tables = set(
+    #         table.name for table in settings.DATABASES["default"]["OPTIONS"]["tables"]
+    #     )
+    #     missing_tables = set(required_tables) - existing_tables
+
+    #     if missing_tables:
+    #         logger.error(f"Missing required tables: {', '.join(missing_tables)}")
+    #         return False
+    #     return True
+
     def generate_api_key(self):
         """Generate a new API key for the FBR API"""
         try:
@@ -101,7 +124,7 @@ class FBRAPIService:
             logger.error(f"Error fetching matches: {e}")
             return []
 
-    def sync_all_data(self, league_id=162, skip_players=False):
+    def sync_all_data(self, league_id=162):
         """Sync all data from FBR API"""
         logger.info("Starting full data sync from FBR API")
 
@@ -115,24 +138,13 @@ class FBRAPIService:
             )
             logger.info(f"Synced team: {team['team_name']}")
 
-            # Sync players
-            if skip_players:
-                logger.info(f"Skipping player sync for team: {team['team_name']}")
-                continue
-
-            players = self.get_players_on_team(team["team_id"])
-            for player in players:
-                if player["name"] in ["Squad Total", "Opponent Total"]:
-                    continue
-
-                Player.objects.update_or_create(
-                    name=player["name"],
-                    team_id=Team.objects.get(fbr_id=team["team_id"]).id,
-                    goals_scored=player["goals_scored"],
-                )
-                logger.info(
-                    f"Synced player: {player['name']} for team {team['team_name']}"
-                )
+        for player in settings.WEURO_2025_PLAYERS:
+            Player.objects.update_or_create(
+                name=player["name"],
+                team_id=Team.objects.get(name=player["team"]).id,
+                defaults={"goals_scored": 0},  # Initialize goals scored to 0
+            )
+            logger.info(f"Synced player: {player['name']} for team {player['team']}")
 
         # Update rounds
         for round_data in settings.WEURO_2025_ROUNDS:
@@ -154,7 +166,7 @@ class FBRAPIService:
                 logger.info(f"Updated existing round: {round_obj.name}")
 
         # Sync matches
-        matches = self.get_matches(league_id)
+        matches = settings.WEURO_2025_MATCHES
         for match in matches:
             home_team = Team.objects.get(fbr_id=match["home_team_id"])
             away_team = Team.objects.get(fbr_id=match["away_team_id"])
@@ -168,32 +180,18 @@ class FBRAPIService:
             )
 
             # Round ID is determined from the timestamp
-            round_id = Round.objects.filter(
+            round_obj = Round.objects.filter(
                 starts_at__lte=kickoff_time, ends_at__gte=kickoff_time
             ).first()
 
-            # Check if match already exists and is manually edited
-            existing_match = Match.objects.filter(fbr_id=match["match_id"]).first()
-            if existing_match and existing_match.is_manually_edited:
-                logger.info(
-                    f"Skipping manually edited match: {home_team.name} vs {away_team.name}"
-                )
-                continue
-
             Match.objects.update_or_create(
-                fbr_id=match["match_id"],
+                home_team=home_team,
+                away_team=away_team,
+                kickoff_time=kickoff_time,
+                round_id=round_obj.id,
                 defaults={
-                    "kickoff_time": kickoff_time,
-                    "is_completed": match["home_team_score"] is not None,
-                    "home_score": match["home_team_score"],
-                    "away_score": match["away_team_score"],
-                    "home_team": home_team,
-                    "away_team": away_team,
-                    "round_id": round_id.id,
-                    # Don't override is_manually_edited if it's already True
-                    "is_manually_edited": (
-                        existing_match.is_manually_edited if existing_match else False
-                    ),
+                    "is_completed": False,  # Matches are not completed initially
+                    "is_manually_edited": False,  # Matches are not manually edited initially
                 },
             )
             logger.info(
