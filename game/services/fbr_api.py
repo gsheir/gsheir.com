@@ -180,37 +180,18 @@ class FBRAPIService:
             )
 
             # Round ID is determined from the timestamp
-            round_id = Round.objects.filter(
+            round_obj = Round.objects.filter(
                 starts_at__lte=kickoff_time, ends_at__gte=kickoff_time
             ).first()
 
-            # Check if match already exists and is manually edited
-            existing_match = Match.objects.filter(
-                fbr_id=match["match_id"],
+            Match.objects.update_or_create(
                 home_team=home_team,
                 away_team=away_team,
                 kickoff_time=kickoff_time,
-            ).first()
-            if existing_match and existing_match.is_manually_edited:
-                logger.info(
-                    f"Skipping manually edited match: {home_team.name} vs {away_team.name}"
-                )
-                continue
-
-            Match.objects.update_or_create(
-                fbr_id=match["match_id"],
+                round_id=round_obj.id,
                 defaults={
-                    "kickoff_time": kickoff_time,
-                    "is_completed": match["home_team_score"] is not None,
-                    "home_score": match["home_team_score"],
-                    "away_score": match["away_team_score"],
-                    "home_team": home_team,
-                    "away_team": away_team,
-                    "round_id": round_id.id,
-                    # Don't override is_manually_edited if it's already True
-                    "is_manually_edited": (
-                        existing_match.is_manually_edited if existing_match else False
-                    ),
+                    "is_completed": False,  # Matches are not completed initially
+                    "is_manually_edited": False,  # Matches are not manually edited initially
                 },
             )
             logger.info(

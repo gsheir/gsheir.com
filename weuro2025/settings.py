@@ -669,7 +669,7 @@ WEURO_2025_PLAYERS = [
 
 WEURO_2025_MATCHES = [
     {
-        "match_id": "6049008a",
+        "match_id": None,
         "date": "2025-07-02",
         "time": "18:00",
         "wk": "1",
@@ -684,7 +684,7 @@ WEURO_2025_MATCHES = [
         "referee": "Katalin Kulcsár",
     },
     {
-        "match_id": "8e881654",
+        "match_id": None,
         "date": "2025-07-02",
         "time": "21:00",
         "wk": "1",
