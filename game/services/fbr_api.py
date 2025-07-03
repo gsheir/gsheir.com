@@ -19,11 +19,10 @@ class FBRAPIService:
         self.base_url = settings.FBR_API_BASE_URL
         self.generate_api_key()
         self.headers = {"X-API-Key": self.api_key}
-        
+
         # while not self.check_required_tables():
         #     logger.error("Required tables are missing. Retrying in 10 seconds...")
         #     time.sleep(10)
-            
 
     # def check_required_tables(self):
     #     """Check if required tables exist in the database"""
@@ -43,7 +42,7 @@ class FBRAPIService:
     #         logger.error(f"Missing required tables: {', '.join(missing_tables)}")
     #         return False
     #     return True
-    
+
     def generate_api_key(self):
         """Generate a new API key for the FBR API"""
         try:
@@ -79,7 +78,6 @@ class FBRAPIService:
         except requests.RequestException as e:
             logger.error(f"Error fetching teams: {e}")
             return []
-        
 
     def get_players_on_team(self, team_id):
         """Fetch players for a specific team. The API is faulty so we scrape
@@ -144,13 +142,9 @@ class FBRAPIService:
             Player.objects.update_or_create(
                 name=player["name"],
                 team_id=Team.objects.get(name=player["team"]).id,
-                defaults={
-                    "goals_scored": 0  # Initialize goals scored to 0
-                },
+                defaults={"goals_scored": 0},  # Initialize goals scored to 0
             )
-            logger.info(
-                f"Synced player: {player['name']} for team {player['team']}"
-            )
+            logger.info(f"Synced player: {player['name']} for team {player['team']}")
 
         # Update rounds
         for round_data in settings.WEURO_2025_ROUNDS:
@@ -172,7 +166,7 @@ class FBRAPIService:
                 logger.info(f"Updated existing round: {round_obj.name}")
 
         # Sync matches
-        matches = self.get_matches(league_id)
+        matches = settings.WEURO_2025_MATCHES
         for match in matches:
             home_team = Team.objects.get(fbr_id=match["home_team_id"])
             away_team = Team.objects.get(fbr_id=match["away_team_id"])
@@ -196,7 +190,7 @@ class FBRAPIService:
                 home_team=home_team,
                 away_team=away_team,
                 kickoff_time=kickoff_time,
-                ).first()
+            ).first()
             if existing_match and existing_match.is_manually_edited:
                 logger.info(
                     f"Skipping manually edited match: {home_team.name} vs {away_team.name}"
