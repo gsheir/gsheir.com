@@ -13,14 +13,14 @@
                 <label for="{{ form.code.id_for_label }}">League Code:</label>
                 {{ form.code }}
                 {% if form.code.errors %}
-                    <div class="alert alert-error">{{ form.code.errors }}</div>
+                    <div class="callout callout-error">{{ form.code.errors }}</div>
                 {% endif %}
                 <small class="text-muted">Enter the 6-character league code shared by the league creator</small>
             </div>
             
             <div class="grid grid-2" style="gap: 1rem;">
-                <button type="submit" class="btn btn-success">Join League</button>
-                <a href="{% url 'game:home' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn">Join League</button>
+                <a href="{% url 'game:home' %}" class="btn btn-2">Cancel</a>
             </div>
         </form>
     </div>

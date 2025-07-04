@@ -13,7 +13,7 @@
                 <label for="{{ form.name.id_for_label }}">League Name:</label>
                 {{ form.name }}
                 {% if form.name.errors %}
-                    <div class="alert alert-error">{{ form.name.errors }}</div>
+                    <div class="callout callout-error">{{ form.name.errors }}</div>
                 {% endif %}
             </div>
             
@@ -21,14 +21,14 @@
                 <label for="{{ form.max_participants.id_for_label }}">Maximum Participants:</label>
                 {{ form.max_participants }}
                 {% if form.max_participants.errors %}
-                    <div class="alert alert-error">{{ form.max_participants.errors }}</div>
+                    <div class="callout callout-error">{{ form.max_participants.errors }}</div>
                 {% endif %}
                 <small class="text-muted">Between 2 and 20 participants</small>
             </div>
             
             <div class="grid grid-2" style="gap: 1rem;">
-                <button type="submit" class="btn btn-success">Create League</button>
-                <a href="{% url 'game:home' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn">Create League</button>
+                <a href="{% url 'game:game_home' %}" class="btn btn-2">Cancel</a>
             </div>
         </form>
     </div>
