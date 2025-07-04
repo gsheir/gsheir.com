@@ -1,6 +1,6 @@
-{% extends 'game/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}{{ league.name }} - Women's Euro 2025 Game{% endblock %}
+{% block title %}{{ league.name }} - Women’s Euro 2025 Game{% endblock %}
 
 {% block content %}
 <div class="card">
@@ -10,22 +10,22 @@
             <p class="text-muted">League Code: <strong>{{ league.code }}</strong></p>
         </div>
         <div>
-            <a href="{% url 'game:selection' league_id=league.id %}" class="btn btn-success">Make Selection</a>
+            <a href="{% url 'game:selection' league_id=league.id %}" class="btn">Make Selection</a>
         </div>
     </div>
     
     {% if current_round %}
-        <div class="alert alert-info">
+        <div class="callout">
             <strong>Current Round:</strong> {{ current_round.name }} (Round {{ current_round.number }})
         </div>
     {% else %}
-        <div class="alert alert-warning">
+        <div class="callout callout-error">
             <strong>No Round in Progress:</strong> There are currently no matches being played. Check back during tournament rounds!
         </div>
     {% endif %}
     
     {% if selection_round %}
-        <div class="alert alert-success">
+        <div class="callout callout-error">
             <strong>Selection Open:</strong> {{ selection_round.name }} (Round {{ selection_round.number }})
             - Selection closes {{ selection_round.selection_closes|date:"M d, Y H:i T" }}
         </div>

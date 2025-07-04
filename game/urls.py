@@ -7,9 +7,9 @@ app_name = "game"
 
 urlpatterns = [
     # Root blank page
-    path("", views.BlankPageView.as_view(), name="blank_home"),
+    path("", views.HomeView.as_view(), name="home"),
     # Game functionality under weuro2025_game path
-    path("weuro2025_game/", views.HomeView.as_view(), name="home"),
+    path("weuro2025_game/", views.GameHomeView.as_view(), name="game_home"),
     path(
         "weuro2025_game/login/",
         auth_views.LoginView.as_view(template_name="game/login.html"),

@@ -35,9 +35,9 @@ Make sure you [have Docker installed](https://docs.docker.com/desktop/). Then
 
    The web app will be available at `http://localhost:8080/`
 
-## Women's Euro 2025 game
+## Women’s Euro 2025 game
 
-This project presents a fantasy draft game for the Women's Euro 2025, where participants can create and join leagues to compete against friends. 
+This project presents a fantasy draft game for the Women’s Euro 2025, where participants can create and join leagues to compete against friends. 
 
 ![](./static/league.png)
 

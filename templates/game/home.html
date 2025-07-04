@@ -1,14 +1,14 @@
-{% extends 'game/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Home - Women's Euro 2025 Game{% endblock %}
+{% block title %}Home - Women’s Euro 2025 Game{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Welcome to the Women's Euro 2025 Game</h1>
+    <h1>Welcome to the Women’s Euro 2025 Game</h1>
     <p class="mb-3">Welcome, {{ user.username }}! Join leagues and compete with friends by predicting which players will score in each round.</p>
     
     {% if current_round %}
-        <div class="alert alert-info">
+        <div class="callout callout-info">
             <strong>Current Round:</strong> {{ current_round.name }} (Round {{ current_round.number }})
         </div>
     {% endif %}
@@ -16,10 +16,10 @@
 
 <div class="grid grid-2">
     <div class="card">
-        <h3>Quick Actions</h3>
+        <h3>League Actions</h3>
         <div class="grid" style="gap: 1rem;">
-            <a href="{% url 'game:create_league' %}" class="btn btn-success">Create New League</a>
-            <a href="{% url 'game:join_league' %}" class="btn">Join League</a>
+            <a href="{% url 'game:create_league' %}" class="btn">Create New League</a>
+            <a href="{% url 'game:join_league' %}" class="btn btn-2">Join League</a>
         </div>
     </div>
     
@@ -34,7 +34,7 @@
                         <p class="text-muted" style="margin-bottom: 1rem;">{{ participation.league.participant_count }}/{{ participation.league.max_participants }} participants</p>
                         <div class="grid" style="gap: 0.5rem;">
                             <a href="{% url 'game:league' league_id=participation.league.id %}" class="btn">View League</a>
-                            <a href="{% url 'game:selection' league_id=participation.league.id %}" class="btn btn-secondary">Make Selection</a>
+                            <a href="{% url 'game:selection' league_id=participation.league.id %}" class="btn btn-2">Make Selection</a>
                         </div>
                     </div>
                 {% endfor %}

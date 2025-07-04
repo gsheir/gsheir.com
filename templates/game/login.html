@@ -1,6 +1,6 @@
-{% extends 'game/base.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Login - Women's Euro 2025 Game{% endblock %}
+{% block title %}Login - Women’s Euro 2025 Game{% endblock %}
 
 {% block content %}
 <div class="grid" style="place-items: center; min-height: 60vh;">
@@ -13,7 +13,7 @@
                 <label for="{{ form.username.id_for_label }}">Username:</label>
                 {{ form.username }}
                 {% if form.username.errors %}
-                    <div class="alert alert-error">{{ form.username.errors }}</div>
+                    <div class="callout callout-error">{{ form.username.errors }}</div>
                 {% endif %}
             </div>
             
@@ -21,11 +21,11 @@
                 <label for="{{ form.password.id_for_label }}">Password:</label>
                 {{ form.password }}
                 {% if form.password.errors %}
-                    <div class="alert alert-error">{{ form.password.errors }}</div>
+                    <div class="callout callout-error">{{ form.password.errors }}</div>
                 {% endif %}
             </div>
             
-            <button type="submit" class="btn btn-success" style="width: 100%;">Login</button>
+            <button type="submit" class="btn" style="width: 100%;">Login</button>
         </form>
         
         <div class="text-center mt-3">
