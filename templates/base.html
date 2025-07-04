@@ -320,7 +320,7 @@
                 <nav>
                     <ul>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'game:game_home' %}">Women's Euro 2025 Game</a></li>
+                            <li><a href="{% url 'game:game_home' %}">Women’s Euro 2025 Game</a></li>
                             <li><a href="{% url 'game:logout' %}">Logout ({{ user.username }})</a></li>
                         {% else %}
                             <li><a href="{% url 'game:login' %}">Login</a></li>
