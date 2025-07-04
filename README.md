@@ -8,7 +8,7 @@ My personal website to host portfolios and random games.
 
 This application is deployed and hosted with Railway. Currently this is configured via the Railway dashboard, but I am hoping to move to IaC soon. 
 
-The application is available on https://gsheir-dev.up.railway.app/
+The application is available on gsheir.com
 
 ### Local development
 
@@ -33,7 +33,7 @@ Make sure you [have Docker installed](https://docs.docker.com/desktop/). Then
    docker compose exec web python manage.py createsuperuser
    ```
 
-   The web app will be available at `http://localhost:8000/`
+   The web app will be available at `http://localhost:8080/`
 
 ## Women's Euro 2025 game
 
