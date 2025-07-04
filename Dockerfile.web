@@ -50,4 +50,4 @@ RUN poetry run python manage.py collectstatic --noinput
 EXPOSE 8080
 
 # Run migrations and start gunicorn
-ENTRYPOINT ["sh", "-c", "python manage.py migrate && gunicorn --bind [::]:${PORT:-8000} weuro2025.wsgi:application" ] 
+ENTRYPOINT ["sh", "-c", "python manage.py migrate && gunicorn --bind [::]:${PORT:-8080} weuro2025.wsgi:application" ] 

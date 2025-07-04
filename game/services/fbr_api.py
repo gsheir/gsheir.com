@@ -184,6 +184,20 @@ class FBRAPIService:
                 starts_at__lte=kickoff_time, ends_at__gte=kickoff_time
             ).first()
 
+            # Skip sync for completed matches and manually edited matches
+            if Match.objects.filter(
+                home_team=home_team,
+                away_team=away_team,
+                kickoff_time=kickoff_time,
+                round_id=round_obj.id,
+                is_completed=True,
+                is_manually_edited=True,
+            ).exists():
+                logger.info(
+                    f"Skipping match sync for completed or manually edited match: {home_team.name} vs {away_team.name} at {kickoff_time}"
+                )
+                continue
+
             Match.objects.update_or_create(
                 home_team=home_team,
                 away_team=away_team,
