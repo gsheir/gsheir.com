@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Women's Euro 2025 Game{% endblock %}</title>
+    <title>{% block title %}Geoffrey Sheir{% endblock %}</title>
     {% load static %}
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
@@ -274,23 +274,34 @@
         .mt-3 {
             margin-top: 1.5rem;
         }
+
+        .game-link {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .game-link:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="{% url 'game:home' %}" class="logo">Women's Euro 2025</a>
+                <a href="{% url 'game:home' %}" class="logo">gsheir</a>
                 <nav>
                     <ul>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'game:home' %}">Home</a></li>
-                            <li><a href="{% url 'game:create_league' %}">Create League</a></li>
-                            <li><a href="{% url 'game:join_league' %}">Join League</a></li>
+                            <li><a href="{% url 'game:game_home' %}">Women's Euro 2025 Game</a></li>
                             <li><a href="{% url 'game:logout' %}">Logout ({{ user.username }})</a></li>
                         {% else %}
                             <li><a href="{% url 'game:login' %}">Login</a></li>
-                            <li><a href="{% url 'game:register' %}">Register</a></li>
                         {% endif %}
                     </ul>
                 </nav>
@@ -315,7 +326,8 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Women's Euro 2025 Game. All rights reserved.</p>
+            <p>&copy; 2025 Geoffrey Sheir. All rights reserved.</p>
+            <a href="https://github.com/gsheir/gsheir.com" class="game-link">GitHub</a>
         </div>
     </footer>
 </body>

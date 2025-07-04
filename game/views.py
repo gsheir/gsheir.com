@@ -29,8 +29,8 @@ from .models import (
 )
 
 
-class BlankPageView(TemplateView):
-    template_name = "game/blank.html"
+class HomeView(TemplateView):
+    template_name = "home.html"
 
 
 class RegisterView(CreateView):
@@ -46,7 +46,7 @@ class RegisterView(CreateView):
         return "/weuro2025_game/"
 
 
-class HomeView(LoginRequiredMixin, TemplateView):
+class GameHomeView(LoginRequiredMixin, TemplateView):
     template_name = "game/home.html"
 
     def get_context_data(self, **kwargs):
