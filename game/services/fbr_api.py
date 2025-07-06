@@ -139,10 +139,15 @@ class FBRAPIService:
             logger.info(f"Synced team: {team['team_name']}")
 
         for player in settings.WEURO_2025_PLAYERS:
+            goals_scored = Goal.objects.filter(
+                player=Player.objects.get(name=player["name"]),
+                is_own_goal=False,
+            ).count()
+
             Player.objects.update_or_create(
                 name=player["name"],
                 team_id=Team.objects.get(name=player["team"]).id,
-                defaults={"goals_scored": 0},  # Initialize goals scored to 0
+                defaults={"goals_scored": goals_scored},
             )
             logger.info(f"Synced player: {player['name']} for team {player['team']}")
 
