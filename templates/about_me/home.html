@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}About me{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<div class="grid grid-2">
+    <div class="body">
+        <h1>About me</h1>
+        <p class="mb-3">I’m a product-minded software engineer and am a team lead within Patient Catalyst, a product by PA Consulting, where we are building a patient tracking tool for the NHS that services over 2 million patient pathways each day. </p>
+        <p class="mb-3">My background is a mix between data engineering and backend. I currently build the data pipeline as well as coordinating the dev, product and implementation teams at Patient Catalyst. Before Patient Catalyst, I have experience in the consulting side of things where I worked across embedded and ML projects, across the life science and consumer industries. </p>
+        <p class="mb-3">I see myself as a product engineer. That means that I want to build things that people like and want to use, not just things that work well. </p>
+    </div>
+
+    <div class="img">
+        <img src="{% static 'geoff.jpg' %}" alt="Profile Image" class="img">
+    </div>
+</div>
+
+{% endblock %}
