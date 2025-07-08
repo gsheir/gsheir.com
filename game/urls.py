@@ -8,6 +8,8 @@ app_name = "game"
 urlpatterns = [
     # Root blank page
     path("", views.HomeView.as_view(), name="home"),
+    # About me page
+    path("about_me/", views.AboutMeView.as_view(), name="about_me"),
     # Game functionality under weuro2025_game path
     path("weuro2025_game/", views.GameHomeView.as_view(), name="game_home"),
     path(

@@ -310,6 +310,14 @@
             margin-top: 1.5rem;
         }
 
+        .img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -319,6 +327,7 @@
                 <a href="{% url 'game:home' %}" class="logo">gsheir</a>
                 <nav>
                     <ul>
+                        <li><a href="{% url 'game:about_me' %}">About Me</a></li>
                         {% if user.is_authenticated %}
                             <li><a href="{% url 'game:game_home' %}">Women’s Euro 2025 Game</a></li>
                             <li><a href="{% url 'game:logout' %}">Logout ({{ user.username }})</a></li>
