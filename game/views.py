@@ -36,11 +36,12 @@ class HomeView(TemplateView):
 class AboutMeView(TemplateView):
     template_name = "about_me/home.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
-        return context
+    
+class BlogHomeView(TemplateView):
+    template_name = "blog/home.html"
 
+class BlogFantasyFootballView(TemplateView):
+    template_name = "blog/fantasy_football.html"
 
 class RegisterView(CreateView):
     form_class = UserCreationForm

@@ -10,6 +10,13 @@ urlpatterns = [
     path("", views.HomeView.as_view(), name="home"),
     # About me page
     path("about_me/", views.AboutMeView.as_view(), name="about_me"),
+    # Blog
+    path("blog/", views.BlogHomeView.as_view(), name="blog_home"),
+    path(
+        "blog/fantasy_football/",
+        views.BlogFantasyFootballView.as_view(),
+        name="blog_fantasy_football",
+    ),
     # Game functionality under weuro2025_game path
     path("weuro2025_game/", views.GameHomeView.as_view(), name="game_home"),
     path(
