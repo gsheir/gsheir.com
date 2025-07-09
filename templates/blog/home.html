@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog - gsheir.com{% endblock %}
+
+{% block content %}
+
+<div class="body">
+    <h1>Blog</h1>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <div>
+            <h3>I built a fantasy football game (and portfolio site) with AI, and it was actually good</h3>
+            <p>How I ended up building gsheir.com using AI-assisted coding.</p>
+            <p class="text-muted">Posted on 9th July 2025</p>
+        </div>
+        <div>
+             <a href="{% url 'game:blog_fantasy_football' %}" class="btn">Read More</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
