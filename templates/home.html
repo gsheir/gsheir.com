@@ -8,5 +8,23 @@
     <p class="mb-3">This is where I build random stuff.</p>
 </div>
 
+<div class="grid grid-3">
+    <div class="card">
+        <h3>About Me</h3>
+        <p class="mb-3">I’m a product-minded software engineer and team lead at Patient Catalyst, building a patient tracking tool for the NHS.</p>
+        <a href="{% url 'game:about_me' %}" class="btn">Learn More</a>
+    </div>
+    <div class="card">
+        <h3>Blog</h3>
+        <p class="mb-3">Some reflections, e.g. how I built a fantasy football game (and this portfolio site) with GitHub Copilot, and what I learnt...</p>
+        <a href="{% url 'game:blog_home' %}" class="btn">Read More</a>
+    </div>
+
+    <div class="card">
+        <h3>Women’s Euro 2025 Fantasy Football Game</h3>
+        <p class="mb-3">I built a game after a chat in the pub with friends – play it here! </p>
+        <a href="{% url 'game:game_home' %}" class="btn">Play Now</a>
+    </div>
+
 
 {% endblock %}
