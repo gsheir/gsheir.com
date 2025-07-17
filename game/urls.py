@@ -17,6 +17,11 @@ urlpatterns = [
         views.BlogFantasyFootballView.as_view(),
         name="blog_fantasy_football",
     ),
+    path(
+        "blog/coaching/",
+        views.BlogCoachingView.as_view(),
+        name="blog_coaching",
+    ),
     # Game functionality under weuro2025_game path
     path("weuro2025_game/", views.GameHomeView.as_view(), name="game_home"),
     path(

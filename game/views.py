@@ -36,12 +36,18 @@ class HomeView(TemplateView):
 class AboutMeView(TemplateView):
     template_name = "about_me/home.html"
 
-    
+
 class BlogHomeView(TemplateView):
     template_name = "blog/home.html"
 
+
 class BlogFantasyFootballView(TemplateView):
     template_name = "blog/fantasy_football.html"
+
+
+class BlogCoachingView(TemplateView):
+    template_name = "blog/coaching.html"
+
 
 class RegisterView(CreateView):
     form_class = UserCreationForm
