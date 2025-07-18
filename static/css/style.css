@@ -6,7 +6,7 @@
 
 :root {
     --white: #ffffff;
-    --black: #333333;
+    --black: #000000;
     --accent: #003049;
     --accent-hover: #002031;
     --accent-bg: #b0c9ff;
@@ -120,7 +120,7 @@ main {
     margin-bottom: 2rem;
 }
 
-huge,
+.huge-text,
 h1,
 h2,
 h3,
@@ -128,28 +128,36 @@ h4,
 h5,
 h6 {
     font-family: "Gill Sans", sans-serif;
-    margin-bottom: 1rem;
     color: var(--black);
+    line-height: 1.2;
 }
 
-huge {
-    font-size: 6rem;
-    font-weight: 600;
-}
+
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 600;
+    margin-bottom: 3rem;
+}
+
+.huge-text {
+    font-size: 6rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    display: block;
 }
 
 h2 {
     font-size: 2rem;
     font-weight: 550;
+    margin-bottom: 2rem;
 }
 
 h3 {
     font-size: 1.5rem;
     font-weight: 450;
+    margin-bottom: 1.5rem;
 }
 
 .btn {
