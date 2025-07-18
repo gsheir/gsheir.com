@@ -17,7 +17,7 @@
 <div class="grid grid-2">
     <div class="card">
         <h3>League Actions</h3>
-        <div class="grid" style="gap: 1rem;">
+        <div class="grid gap-1">
             <a href="{% url 'game:create_league' %}" class="btn">Create New League</a>
             <a href="{% url 'game:join_league' %}" class="btn btn-2">Join League</a>
         </div>
@@ -26,13 +26,13 @@
     <div class="card">
         <h3>Your Leagues</h3>
         {% if user_leagues %}
-            <div class="grid" style="gap: 1rem;">
+            <div class="grid gap-1">
                 {% for participation in user_leagues %}
-                    <div style="padding: 1rem; border: 1px solid #ddd; border-radius: 4px;">
-                        <h4 style="margin-bottom: 0.5rem;">{{ participation.league.name }}</h4>
-                        <p class="text-muted" style="margin-bottom: 0.5rem;">Code: {{ participation.league.code }}</p>
-                        <p class="text-muted" style="margin-bottom: 1rem;">{{ participation.league.participant_count }}/{{ participation.league.max_participants }} participants</p>
-                        <div class="grid" style="gap: 0.5rem;">
+                    <div class="league-card">
+                        <h4 class="mb-2">{{ participation.league.name }}</h4>
+                        <p class="text-muted mb-2">Code: {{ participation.league.code }}</p>
+                        <p class="text-muted mb-2">{{ participation.league.participant_count }}/{{ participation.league.max_participants }} participants</p>
+                        <div class="grid gap-half">
                             <a href="{% url 'game:league' league_id=participation.league.id %}" class="btn">View League</a>
                             <a href="{% url 'game:selection' league_id=participation.league.id %}" class="btn btn-2">Make Selection</a>
                         </div>
