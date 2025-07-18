@@ -41,15 +41,15 @@
         <h3>Your Provisional Selection List</h3>
         <p class="text-muted mb-3">Drag and drop players to reorder your preferences. When it's your turn to select, the top 3 available players will be chosen automatically.</p>
         
-        <div id="provisional-list" style="min-height: 200px; border: 2px dashed #ddd; border-radius: 4px; padding: 1rem;">
+        <div id="provisional-list" class="provisional-list">
             {% if provisional_selections %}
                 {% for selection in provisional_selections %}
-                    <div class="provisional-item" data-player-id="{{ selection.player.id }}" style="background: #f8f9fa; margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 4px; cursor: move; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="provisional-item" data-player-id="{{ selection.player.id }}">
                         <div>
                             <strong>{{ selection.player.name }}</strong> ({{ selection.player.team.name }})<br>
                             <small class="text-muted">{{ selection.player.position }} - {{ selection.player.goals_scored }} goals</small>
                         </div>
-                        <button onclick="removeFromProvisional({{ selection.player.id }})" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Remove</button>
+                        <button onclick="removeFromProvisional({{ selection.player.id }})" class="btn btn-danger btn-small">Remove</button>
                     </div>
                 {% endfor %}
             {% else %}
@@ -64,23 +64,23 @@
     
     <div class="card">
         <h3>All Players</h3>
-        <div style="margin-bottom: 1rem;">
+        <div class="mb-2">
             <input type="text" id="player-search" class="form-control" placeholder="Search players...">
         </div>
         
-        <div id="players-list" style="max-height: 500px; overflow-y: auto;">
+        <div id="players-list" class="players-list">
             {% for player in players %}
-                <div class="player-item" data-player-id="{{ player.id }}" 
+                <div class="player-item {% if player.id in selected_players %}player-item-selected{% endif %}" data-player-id="{{ player.id }}" 
                      data-selected="{% if player.id in selected_players %}true{% else %}false{% endif %}"
                      style="padding: 0.75rem; border-bottom: 1px solid #eee; cursor: pointer; {% if player.id in selected_players %}background-color: #ffebee; opacity: 0.6;{% endif %}"
                      onclick="{% if player.id not in selected_players %}addToProvisional({{ player.id }}, '{{ player.name|escapejs }}', '{{ player.team.name|escapejs }}', '{{ player.position|escapejs }}', {{ player.goals_scored }}){% endif %}">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="flex-between">
                         <div>
                             <strong>{{ player.name }}</strong> ({{ player.team.name }})<br>
                             <small class="text-muted">{{ player.position }} - {{ player.goals_scored }} goals scored</small>
                         </div>
                         {% if player.id in selected_players %}
-                            <span style="color: #d32f2f; font-size: 0.8rem;">Already Selected</span>
+                            <span class="already-selected-text">Already Selected</span>
                         {% endif %}
                     </div>
                 </div>
@@ -143,12 +143,12 @@ function updateProvisionalDisplay() {
     }
     
     container.innerHTML = provisionalPlayers.map((player, index) => `
-        <div class="provisional-item" data-player-id="${player.id}" style="background: #f8f9fa; margin-bottom: 0.5rem; padding: 0.75rem; border-radius: 4px; cursor: move; display: flex; justify-content: space-between; align-items: center;">
+        <div class="provisional-item" data-player-id="${player.id}">
             <div>
                 <strong>${player.name}</strong> (${player.team})<br>
                 <small class="text-muted">${player.position} - ${player.goals_scored} goals</small>
             </div>
-            <button onclick="removeFromProvisional(${player.id})" class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">Remove</button>
+            <button onclick="removeFromProvisional(${player.id})" class="btn btn-danger btn-small">Remove</button>
         </div>
     `).join('');
 }

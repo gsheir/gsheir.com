@@ -3,8 +3,8 @@
 {% block title %}Create League - Women’s Euro 2025 Game - gsheir.com {% endblock %}
 
 {% block content %}
-<div class="grid" style="place-items: center; min-height: 60vh;">
-    <div class="card" style="width: 100%; max-width: 500px;">
+<div class="grid center-grid">
+    <div class="card form-card-wide">
         <h2 class="text-center mb-3">Create New League</h2>
         
         <form method="post">
@@ -26,7 +26,7 @@
                 <small class="text-muted">Between 2 and 20 participants</small>
             </div>
             
-            <div class="grid grid-2" style="gap: 1rem;">
+            <div class="grid grid-2 gap-1">
                 <button type="submit" class="btn">Create League</button>
                 <a href="{% url 'game:game_home' %}" class="btn btn-2">Cancel</a>
             </div>

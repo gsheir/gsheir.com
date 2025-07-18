@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <div class="flex-between mb-2">
         <div>
             <h1>{{ league.name }}</h1>
             <p class="text-muted">League Code: <strong>{{ league.code }}</strong></p>
@@ -40,19 +40,19 @@
         {% if current_round and current_matches %}
             <p class="text-muted">{{ current_round.name }} - Round {{ current_round.number }}</p>
             {% for match in current_matches %}
-                <div style="padding: 0.75rem; margin-bottom: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="font-weight: bold;">
+                <div class="match-card">
+                    <div class="flex-between">
+                        <div class="font-bold">
                             {{ match.home_team.name }} vs {{ match.away_team.name }}
                         </div>
-                        <div style="text-align: right;">
+                        <div class="text-right">
                             {% if match.is_completed %}
-                                <div style="font-size: 1.2em; font-weight: bold;">
+                                <div class="score-large">
                                     {{ match.home_score|default:"0" }} - {{ match.away_score|default:"0" }}
                                 </div>
-                                <div style="font-size: 0.9em; color: #666;">Final</div>
+                                <div class="score-small">Final</div>
                             {% else %}
-                                <div style="font-size: 0.9em; color: #666;">
+                                <div class="score-small">
                                     {{ match.kickoff_time|date:"M d, H:i T" }}
                                 </div>
                             {% endif %}
@@ -77,13 +77,13 @@
         <h3>Next Round Matches</h3>
         <p class="text-muted">{{ next_round.name }} - Round {{ next_round.number }}</p>
         {% for match in next_matches %}
-            <div style="padding: 0.75rem; margin-bottom: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="font-weight: bold;">
+            <div class="match-card">
+                <div class="flex-between">
+                    <div class="font-bold">
                         {{ match.home_team.name }} vs {{ match.away_team.name }}
                     </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 0.9em; color: #666;">
+                    <div class="text-right">
+                        <div class="score-small">
                             {{ match.kickoff_time|date:"M d, H:i T" }}
                         </div>
                     </div>
@@ -114,7 +114,7 @@
                 </thead>
                 <tbody>
                     {% for standing in standings %}
-                        <tr {% if standing.user == user %}style="background-color: #e3f2fd;"{% endif %}>
+                        <tr {% if standing.user == user %}class="highlighted-row"{% endif %}>
                             <td>{{ standing.position }}</td>
                             <td>
                                 {{ standing.user.username }}
@@ -135,15 +135,15 @@
         <h3>Round {{ current_round.number|default:"TBD" }} Selections</h3>
         {% if user_selections %}
             {% for user_obj, players in user_selections.items %}
-                <div style="margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #ddd; border-radius: 4px;">
-                    <h4 style="margin-bottom: 0.5rem;">
+                <div class="team-selection">
+                    <h4 class="mb-2">
                         {{ user_obj.username }}
                         {% if user_obj == user %}<em>(You)</em>{% endif %}
                     </h4>
                     {% if players %}
-                        <ul style="list-style: none; padding: 0; margin: 0;">
+                        <ul class="team-list">
                             {% for player in players %}
-                                <li style="padding: 0.25rem 0;">
+                                <li class="team-list-item">
                                     {{ forloop.counter }}. {{ player.name }} ({{ player.team.name }})
                                     <span class="text-muted">- {{ player.goals_scored }} goals</span>
                                 </li>
