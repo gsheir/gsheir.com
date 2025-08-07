@@ -49,6 +49,14 @@ class BlogCoachingView(TemplateView):
     template_name = "blog/coaching.html"
 
 
+class BlogArsenalPressPart1View(TemplateView):
+    template_name = "blog/arsenal_press_part_1.html"
+
+
+class BlogArsenalPressPart2View(TemplateView):
+    template_name = "blog/arsenal_press_part_2.html"
+
+
 class RegisterView(CreateView):
     form_class = UserCreationForm
     template_name = "game/register.html"
