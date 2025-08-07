@@ -355,6 +355,14 @@ footer ul {
     margin: 0 auto;
     border-radius: 4px;
 }
+.caption {
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--mid-grey);
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+}
 
 /* Layout utilities */
 .flex-between {
