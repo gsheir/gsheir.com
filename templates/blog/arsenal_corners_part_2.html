@@ -176,6 +176,7 @@
         <img src="https://images.gsheir.com/arsenal_corners/gifs/multiple_targets.gif" alt="High play quality corner example" class="img">
         <p></p>
         <img src="https://images.gsheir.com/arsenal_corners/gifs/back_post_early_arrival_1.gif" alt="Low play quality corner example" class="img">
+        <p></p>
         <p>
             (If you read Part 1, I might have given it away…)
         </p>
@@ -187,7 +188,7 @@
             With all the positions and roles collected, I could then plot play diagrams for each corner, which helps greatly with understanding what goes on without watching video every time:
         </p>
         <img src="https://images.gsheir.com/arsenal_corners/corner_paths_page_1.png" alt="Example corner play diagrams" class="img">
-
+        <p></p>
         <h2>
             Clustering similar plays to form groups that I could analyse
         </h2>
@@ -205,7 +206,8 @@
             It was okay, and managed to get clusters that could make sense if you thought about it long and hard, but ultimately it suffered a bit from a lack of interpretability and control over the clustering process. You can see for yourself if the “average” plays for each cluster make sense, because some do, but most don’t:
         </p>
         <img src="https://images.gsheir.com/arsenal_corners/all_roles_clustered_corner_paths.png" alt="K-means centroid play diagrams" class="img">
-
+        <p></p>
+        
         <h3>
             Similarity score + spectral clustering
         </h3>
@@ -213,23 +215,24 @@
             The other method I tried, and the method I’m a bit more optimistic about, is defining a similarity scoring system for corners. Corners would have a higher similarity score if equivalent roles had similar start and end positions, while the score would be penalised if there were big differences in the availability of roles. The benefit here is that we can leverage a bit more domain knowledge to give importance to things that we know to matter at corners, and it’s a bit easier to explain why corners ended up in the same cluster:
         </p>
         <pre>
-CLUSTER 0 (4 corners)
-----------------------------------------
-Corner IDs: COR-2, COR-9, COR-11, COR-31
+    CLUSTER 0 (4 corners)
+    ----------------------------------------
+    Corner IDs: COR-2, COR-9, COR-11, COR-31
 
-Key similarities:
-  • Shot target players (7 total):
-    - Start positions: (41.4, 109.3) - highly consistent
-    - End positions: (36.9, 115.1)
-  • Pass target players (4 total):
-    - Start positions: (39.2, 115.5) - highly consistent
-    - End positions: (36.7, 117.8)
+    Key similarities:
+    • Shot target players (7 total):
+        - Start positions: (41.4, 109.3) - highly consistent
+        - End positions: (36.9, 115.1)
+    • Pass target players (4 total):
+        - Start positions: (39.2, 115.5) - highly consistent
+        - End positions: (36.7, 117.8)
         </pre>
 
         <p>
             Once we have a similarity matrix (i.e. the similarity score for every combination of pairs of corners), then we can use spectral clustering to find the clusters.
         </p>
         <img src="https://images.gsheir.com/arsenal_corners/corner_similarity_clustering.png" alt="Similarity matrix and spectral clustering" class="img">
+        <p></p>
         <p>
             Ultimately for the article, I ended up grouping the corners by hand after looking over their play diagrams, but I’d like to get the similarity-based clustering to a point where it’s giving me sensible clusters, even if they are the same ones that I come up with, because then that becomes a very useful scouting tool. Ultimately for the article, I ended up grouping the corners by hand after looking over their play diagrams, but I’d like to get the similarity-based clustering to a point where it’s giving me sensible clusters, even if they are the same ones that I come up with, because then that becomes a very useful scouting tool. 
         </p>

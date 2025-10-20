@@ -16,13 +16,14 @@
             I was at the Emirates last Saturday when Arsenal just about got the win against Brighton, and one of the more interesting (and mildly infuriating) features of that game were the amount of corners hit low to the front post. The success rate there was pretty low, and it’s been pretty low so far this season, with 1 goal from about 45 corners. I decided to try and figure out why this was the case.
         </p>
         <p>
-            This is a classic two-part piece - my findings and recommendations are in Part 1 (here), and my methodology, including data collection, analysis methods and data science-y things, are in <a href="{% url 'game:blog_arsenal_press_part_2' %}">Part 2: A data driven approach to corner analysis and assessment</a>
+            This is a classic two-part piece – my findings and recommendations are in Part 1 (here), and my methodology, including data collection, analysis methods and data science-y things, are in <a href="{% url 'game:blog_arsenal_corners_part_2' %}">Part 2: A data driven approach to corner analysis and assessment</a>.
         </p>
 
         <h2>
             Arsenal’s template corner play provides a triple threat for unpredictability 
         </h2>
         <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Template%20play.drawio.png" alt="Arsenal's template corner play" class="img">
+        <p></p>
         <p>
             Arsenal tend to run a template play, where there are specific groups that players are assigned to:
         </p>
@@ -77,7 +78,7 @@
         <img src="https://images.gsheir.com/arsenal_corners/gifs/good_front_post.gif" alt="Arsenal's corner delivery example" class="img">
         <p class="caption">View this clip on <a href="https://www.youtube.com/live/ybQDwsrwIfg?si=adkyMMFpczf71nGg&t=4858" target="_blank">YouTube</a></p>
 
-        <table>
+        <table class="table">
             <thead>
                 <tr>
                     <th></th>
@@ -86,16 +87,17 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Mean play quality</td><td>1.856</td>
+                    <td></td><td><strong>Mean play quality</strong></td>
                 </tr>
                 <tr>
-                    <td>Front post, multiple shot targets</td><td>1.407</td>
+                    <td>Front post, multiple shot targets</td><td>1.856</td>
+                    
                 </tr>
                 <tr>
-                    <td>Front post, single shot target</td><td>0.968</td>
+                    <td>Front post, single shot target</td><td>1.407</td>
                 </tr>
                 <tr>
-                    <td>Back post</td><td>1.495</td>
+                    <td>Back post</td><td>0.968</td>
                 </tr>
                 <tr>
                     <td>Short lead</td><td>1.495</td>
@@ -103,9 +105,12 @@
 
             </tbody>
         </table>
-        <p></p>
-        <em>A note on this play quality metric: of the corners recorded, the lowest score was 0.58 (Brighton 63rd minute) and the highest score was 2.95 (Brighton 8th minute), to give a sense of scale.</em>
-        
+
+
+        <p>
+             <em>A note on this play quality metric: of the corners recorded, the lowest score was 0.58 (Brighton 63rd minute) and the highest score was 2.95 (Brighton 8th minute), to give a sense of scale.</em>
+        </p>
+
         <h2>
             Back post corners can benefit from late runs from deep
         </h2>
@@ -133,15 +138,18 @@
             The triple threat that the template play provides has the benefit of spreading out the opposition’s zonal defence, but I would be interested to see Arsenal test out plays where the short corner option is removed, and they commit to setting up multiple shot targets in the delivery area. A front post play might look something a bit like this:
         </p>
         <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Multiple%20front%20post.drawio.png" alt="Arsenal's multiple front post shot targets" class="img">
+        <p></p>
         <p>
             And a back post play:
         </p>
         <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Multiple%20back%20post.drawio.png" alt="Arsenal's multiple back post shot targets" class="img">
+        <p></p>
         <p>
             Clearly a lot will depend on the opposition’s defensive setup (which I’ve not touched on at all in this piece), but hopefully these changes can lead to better outcomes at corners, and give Arsenal a different dimension in attack. 
         </p>
-
-        <em>Read Part 2 here: <a href="{% url 'game:blog_arsenal_press_part_2' %}">Part 2: A data driven approach to corner analysis and assessment</a></em>
+        <p>
+            <em>Read Part 2 here: <a href="{% url 'game:blog_arsenal_corners_part_2' %}">Part 2: A data driven approach to corner analysis and assessment</a></em>
+        </p>
     </div>
 </article>
 
