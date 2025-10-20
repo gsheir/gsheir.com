@@ -1,0 +1,153 @@
+{% extends 'base.html' %} 
+{% block title %}Part 1: Assessing and improving Arsenal Women’s attacking corners using data - gsheir.com{% endblock %} 
+{% block content %}
+
+{% load static %}
+
+<article>
+    <div>
+        <h1>
+            Part 1: Assessing and improving Arsenal Women’s attacking corners using data
+        </h1>
+
+        <p class="text-muted">Posted on 20th October 2025</p>
+        <p></p>
+        <p>
+            I was at the Emirates last Saturday when Arsenal just about got the win against Brighton, and one of the more interesting (and mildly infuriating) features of that game were the amount of corners hit low to the front post. The success rate there was pretty low, and it’s been pretty low so far this season, with 1 goal from about 45 corners. I decided to try and figure out why this was the case.
+        </p>
+        <p>
+            This is a classic two-part piece – my findings and recommendations are in Part 1 (here), and my methodology, including data collection, analysis methods and data science-y things, are in <a href="{% url 'game:blog_arsenal_corners_part_2' %}">Part 2: A data driven approach to corner analysis and assessment</a>.
+        </p>
+
+        <h2>
+            Arsenal’s template corner play provides a triple threat for unpredictability 
+        </h2>
+        <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Template%20play.drawio.png" alt="Arsenal's template corner play" class="img">
+        <p></p>
+        <p>
+            Arsenal tend to run a template play, where there are specific groups that players are assigned to:
+        </p>
+        <ul>
+            <li>A player presents the short corner option near to the corner taker. The taker for one side becomes the short corner option on the other side. (McCabe, Caldentey)</li>
+            <li>Three players stack near the penalty spot, then attack the edge of the 6-yard box, usually threatening both the front and back post (three from Russo, Blackstenius, Catley, Maanum, Wubben-Moy)</li>
+            <li>Two players start inside the 6-yard box (Foord, Reid, Kelly, sometimes Smith)</li>
+            <li>Several players hang around the edge of the 18-yard box to mop up any loose balls (Little, Smith, Fox)</li>
+        </ul>
+        <p>
+            Therefore there are 3 potential targets (short, front post, back post) at all corners, which means that the play is difficult to predict until the ball is delivered.
+        </p>
+        <p>
+            The 3-player stack is the core of the template play, and one of these players is usually the intended target for taking the shot (I call her the <em>shot target</em>). The way this template gets modified is in how the rest of the players act to give the shot target the best chance of connecting with the delivery.
+        </p>
+
+        <h2>
+            Blocking works well when deployed thoughtfully to create space for the shot target
+        </h2>
+        <p>
+            A key feature of Arsenal’s corners is the use of blockers, similar to screening in basketball or linemen in American football. This isn’t a new concept (Arsenal Men deploy it with great effect) but it is worth highlighting here as it is often instrumental in creating space for the shot target.
+        </p>
+        <p>
+            Particularly impressive is the use of blocking against multiple defenders at a time. Watch how smart initial positioning from Catley (number 7) and Reid (26) allow them to hold off two defenders each, giving Russo (23) a clear area at the front of the 6-yard box to attack. 
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Blocking%20front%20post.drawio.png" alt="Arsenal's corner blocking example front post" class="img">
+        <p></p>
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/blocking_brighton.gif" alt="Arsenal's corner blocking example 1" class="img">
+        <p class="caption">View this clip on <a href="https://www.youtube.com/live/ybQDwsrwIfg?t=2986s" target="_blank">YouTube</a></p>
+        <p>
+            In this example, Wubben-Moy (3) manages to deny 3 defenders the opportunity to get close to Russo. Notice how she barely makes an attempt to win the ball, and her cheeky drag of the defender’s arm to pull her across to block the path to Russo (23). You could also probably argue that Catley (7) was also pushing her defender away from Russo, giving her an uncontested header at goal.
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Blocking%20back%20post.drawio.png" alt="Arsenal's corner blocking example back post" class="img">
+        <p></p>
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/blocking_city.gif" alt="Arsenal's corner blocking example 2" class="img">
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/blocking_city_zoomed.gif" alt="Arsenal's corner blocking example 2 zoomed" class="img">
+        <p class="caption">View this clip on <a href="https://www.youtube.com/live/riU2fTHdt2w?t=4621s" target="_blank">YouTube</a></p>
+        
+        <h2>
+            Front post corners are set up well but the delivery needs to be further away from the touchline
+        </h2>
+        <p>
+            To assess the quality of a play, I defined a play quality metric. In short, it is the “shot creation probability” that players provide at a corner, based on their role and how free they managed to get from their marker. An unmarked player whose role is to take a shot (as opposed to be a blocker or decoy) gets a score of 1, and the number goes down if they have a less dangerous role or if they are marked tightly. A full explanation is in Part 2. 
+        </p>
+        <p>
+            Using this play quality metric, we see slightly better performance at front post plays. However, even though the shot targets are making the lead to the edge of the 6-yard box, the deliveries are often too close to the touchline. This probably explains a lot of the frustration felt at the Brighton game last week.
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/left_front_post_delivery_vs_run_heatmap.png" alt="Arsenal's front post delivery locations" class="img">
+        <p>
+            The relatively high play quality suggests that the corner routines are set up well, and the individual players are getting into good positions, relative to their markers, to attack the ball. Delivering the ball more consistently to the edge of the 6-yard box should improve the threat from those corners, like this one here: 
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/good_front_post.gif" alt="Arsenal's corner delivery example" class="img">
+        <p class="caption">View this clip on <a href="https://www.youtube.com/live/ybQDwsrwIfg?si=adkyMMFpczf71nGg&t=4858" target="_blank">YouTube</a></p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th><th>Mean play quality</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Front post, multiple shot targets</td><td>1.856</td>
+                    
+                </tr>
+                <tr>
+                    <td>Front post, single shot target</td><td>1.407</td>
+                </tr>
+                <tr>
+                    <td>Back post</td><td>0.968</td>
+                </tr>
+                <tr>
+                    <td>Short lead</td><td>1.495</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+        <p>
+             <em>A note on this play quality metric: of the corners recorded, the lowest score was 0.58 (Brighton 63rd minute) and the highest score was 2.95 (Brighton 8th minute), to give a sense of scale.</em>
+        </p>
+
+        <h2>
+            Back post corners can benefit from late runs from deep
+        </h2>
+        <p>
+            A key difference for Arsenal’s back post plays compared to their front post ones is how early the shot target arrives at the target zone. While this helps secure a place in that zone amongst the defenders, it becomes harder to generate enough power on the connection to be threatening. Notice how in both of these examples, the shot target arrives while the ball is still halfway through the air, and the contact generated afterwards lacks power as a result.
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/back_post_early_arrival_1.gif" alt="Arsenal's back post corner example 1" class="img">
+        <p class="caption">View this clip on <a href="https://www.youtube.com/live/aXBJsJDtoEg?t=1837s" target="_blank">YouTube</a></p>
+
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/back_post_early_arrival_2.gif" alt="Arsenal's back post corner example 2" class="img">
+        <p class="caption">View this clip on <a href="https://www.youtube.com/watch?v=bnbw1Ozc_2M&t=2075s" target="_blank">YouTube</a></p>
+        <p>
+            Delaying the shot target’s run so that she can attack the ball at pace would be ideal, but there is no guarantee that the space will be free to attack. This leads back to the blocking idea, and using blockers to clear space for the shot target to run into would increase the probability of getting a successful shot off.
+        </p>
+
+        <h2>
+            Sacrificing the triple threat to deploy multiple shot targets can be the remedy for variable deliveries
+        </h2>
+        <p>
+            The reasoning goes like this - if the delivery can’t be precise all the time, then placing multiple potential receivers in the area increases the chances of one of them connecting. Already we are seeing examples where multiple shot targets arrive all at once, and more often than not, they are all getting in front of their marker to attack the ball.
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/multiple_targets.gif" alt="Arsenal's multiple shot targets example" class="img">
+        <p class="caption">View this clip on <a href="https://www.youtube.com/live/ybQDwsrwIfg?t=494s" target="_blank">YouTube</a></p>
+        <p>
+            The triple threat that the template play provides has the benefit of spreading out the opposition’s zonal defence, but I would be interested to see Arsenal test out plays where the short corner option is removed, and they commit to setting up multiple shot targets in the delivery area. A front post play might look something a bit like this:
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Multiple%20front%20post.drawio.png" alt="Arsenal's multiple front post shot targets" class="img">
+        <p></p>
+        <p>
+            And a back post play:
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/Football%20analysis-Multiple%20back%20post.drawio.png" alt="Arsenal's multiple back post shot targets" class="img">
+        <p></p>
+        <p>
+            Clearly a lot will depend on the opposition’s defensive setup (which I’ve not touched on at all in this piece), but hopefully these changes can lead to better outcomes at corners, and give Arsenal a different dimension in attack. 
+        </p>
+        <p>
+            <em>Read Part 2 here: <a href="{% url 'game:blog_arsenal_corners_part_2' %}">Part 2: A data driven approach to corner analysis and assessment</a></em>
+        </p>
+    </div>
+</article>
+
+{% endblock %}

@@ -32,6 +32,17 @@ urlpatterns = [
         views.BlogArsenalPressPart2View.as_view(),
         name="blog_arsenal_press_part_2",
     ),
+    path(
+        "blog/arsenal_corners_part_1/",
+        views.BlogArsenalCornersPart1View.as_view(),
+        name="blog_arsenal_corners_part_1",
+    ),
+    path(
+        "blog/arsenal_corners_part_2/",
+        views.BlogArsenalCornersPart2View.as_view(),
+        name="blog_arsenal_corners_part_2",
+    ),
+
     # Game functionality under weuro2025_game path
     path("weuro2025_game/", views.GameHomeView.as_view(), name="game_home"),
     path(
