@@ -1,0 +1,247 @@
+{% extends 'base.html' %} 
+{% block title %}Part 2: A data driven approach to corner analysis and assessment - gsheir.com{% endblock %} 
+{% block content %}
+
+{% load static %}
+
+<article>
+    <div>
+        <h1>
+            Part 2: A data driven approach to corner analysis and assessment
+        </h1>
+
+        <p class="text-muted">Posted on 20th October 2025</p>
+        <p></p>
+        <p>
+            <em>
+                This is a companion piece to <a href="{% url 'game:blog_arsenal_corners_part_1' %}">Part 1: Assessing and improving Arsenal Women’s attacking corners using data</a>.
+            </em>
+        </p>
+        <p>
+            <em>
+                To see all the code used (and try it out), see <a href="https://github.com/gsheir/arsenal_corners" target="_blank">the GitHub repo</a>.
+            </em>
+        </p>
+
+        <p>
+            While this piece was triggered by what I saw at the Brighton game last week, I’ve been wanting to do some longitudinal analysis on Arsenal’s season, particularly right now when we haven’t had the greatest of starts to the season. But hey, that means there’s more opportunity to make gains. 
+        </p>
+        <p>
+            The answer to “why are we losing games” can be very broad, and for a piece like this, fixing everything isn’t the point. At Richmond Hockey Club, where I am the Men’s 1st Team Performance Analyst, I’ve learnt that focusing on a small section of the game, finding something actionable and evidencing it well is much better than broad brush strokes, and it gives me the foundation to build the team’s trust in the numbers. 
+        </p>
+        <p>
+            For corners, which is a particularly self-contained and repeatable part of the game, I went about it as follows:
+        </p>
+        <ul>
+            <li>Defining and identifying roles</li>
+            <li>Defining pitch geography and recording player locations (as a substitute for tracking data)</li>
+            <li>Spotting existing patterns (i.e. clustering)</li>
+            <li>Critically assessing good and bad patterns / actions, and</li>
+            <li>Finding gains</li>
+        </ul>
+
+        <h2>
+            Data collection, tracking data and knowing what is really needed
+        </h2>
+
+        <p>
+            Sadly I don’t have access to tracking data, but I do have access to broadcast video (on YouTube). This means that I inevitably have to do all the data collection myself. This isn’t the worst thing in the world, as I get the opportunity to also watch the videos and process them in my head, but I needed to be strategic about what I collected so I didn’t bore myself to death. 
+        </p>
+        <p>
+            I used the following corner zones, and for each corner, I recorded the start and end positions of each player during the corner, as defined by the following:
+        </p>
+        <ul>
+            <li><strong>Start position</strong>: Right before the corner taker begins her run-up. My hypothesis (which was confirmed after watching a few clips) was that the players don’t tend to have multiple phases of movement, in what would be known as a pre-snap motion in American football (e.g. drifting for 10 metres before changing direction to make their final run). Therefore this definition is fine.</li>
+            <li><strong>End position</strong>: When the ball arrives at the target area. This is usually quite clear cut (e.g. about to land on the attacker’s head), but some judgement is needed for deliveries that clearly didn’t go to where they were supposed to go, because players will check their runs when they see that happening. Since the purpose is to capture the intent of the play, picking a slightly earlier point in time usually provides enough information as to where the player was aiming for.</li>
+        </ul>
+        <img src="https://images.gsheir.com/arsenal_corners/corner_zones.png" alt="Corner zones for data collection" class="img">
+
+        <h2>
+            A play quality metric indicates how likely we would score if the delivery was successful
+        </h2>
+        <p>
+            So much of the success of a corner depends on the delivery, and as fans that is naturally where our focus lies. As coaches and analysts, however, we need a way to measure and reward the process goals as well as the outcome. Here I define a play quality metric that aims to measure
+        </p>
+        <ul>
+            <li>How well was the play designed?</li>
+            <li>How well did each player execute their role?</li>
+        </ul>
+        <p>
+            For every player, the metric is the probability of them being able to take a shot on goal. If there was no one around them and the delivery was perfect, this would be 1. This is tempered by their role and how they are marked. Where more detailed data is available, this could also include a physical metric (e.g. <a href="https://www.hudl.com/blog/introducing-hops-a-new-way-to-evaluate-heading-ability">HOPS</a> or velocity), but I don’t have that right now.
+        </p>
+        <p>
+            Each player is assigned a role, based on what I could infer from their movement in the video. Each player is also assigned a marking score, which is how tightly they were marked at the end of their movement. The scores are multiplied to give the player’s score, and the sum of the scores is the score for that corner.
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Description</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Shot target</td>
+                    <td>A first receiver that is intended to take a shot</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Pass target</td>
+                    <td>A first receiver that is intended to pass the ball (e.g. flick on, head back across goal)</td>
+                    <td>0.5</td>
+                </tr>
+                <tr>
+                    <td>Second target</td>
+                    <td>A second receiver that is intended to take a shot</td>
+                    <td>0.2</td>
+                </tr>
+                <tr>
+                    <td>Blocker</td>
+                    <td>A player who is deliberately blocking an opponent from reaching an area. Relatively low because they aren’t intending to score, but the value of a good blocker would be reflected elsewhere in the scoring.</td>
+                    <td>0.1</td>
+                </tr>
+                <tr>
+                    <td>Decoy</td>
+                    <td>A player who isn’t aiming to win the ball, only to occupy a defender</td>
+                    <td>0.1</td>
+                </tr>
+                <tr>
+                    <td>Mop up</td>
+                    <td>A player who is waiting for a breakaway or loose ball away from the congested areas</td>
+                    <td>0.05</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p></p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Marking</th>
+                    <th>Description</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Free</td>
+                    <td>In space with no obvious marker</td>
+                    <td>1</td> 
+                </tr>
+                <tr>
+                    <td>Freed by blocker</td>
+                    <td>In space because the marker has been blocked by a teammate</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Blocking</td>
+                    <td>Is blocking and is in front of the marker relative to the space being denied. Can be blocking multiple people.</td>
+                    <td>1 (because only blockers can be blocking and there is no point penalising them further)</td>
+                </tr>
+                <tr>
+                    <td>Gained separation</td>
+                    <td>Has got in front of their marker relative to the ball or pulled away from their marker</td>
+                    <td>0.8</td>
+                </tr>
+                <tr>
+                    <td>Watched zonally</td>
+                    <td>Is being covered by a zonal defender</td>
+                    <td>0.5</td>
+                </tr>
+                <tr>
+                    <td>Goal marked</td>
+                    <td>Marked on the goal side</td>
+                    <td>0.3</td>
+                </tr>
+                <tr>
+                    <td>Front marked</td>
+                    <td>Is behind the marker relative to the ball</td>
+                    <td>0.1</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            There are some caveats:
+        </p>
+        <ul>
+            <li>Since I am using broadcast data, players that are out of shot won’t have any data collected on them. This unfortunately means that some corners had incomplete data (sometimes severely so), and they had to be discarded. In a club setting, analysts will have tactical cameras which should solve this issue.</li>
+            <li>This metric is currently a subjective metric, in the sense that it requires a human to categorise each player’s actions. For roles, those in the know (i.e. Arsenal staff) can directly map this to their plan, but those not in the know (e.g. opposition analysts) will just have to guess. For the marking type, one can imagine a world where highly detailed computer vision (e.g. using pose estimation) and tracking data might be able to automate this, but that’s still a big “might”, and it probably isn’t quite here yet.</li>
+        </ul>
+        <p>
+            Does this metric work in practice? To see for yourself, here are two corners, one got a very high score (2.945) and the other got a very low score (0.625). Ask yourself – if the delivery was perfect, how likely would Arsenal have scored? 
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/multiple_targets.gif" alt="High play quality corner example" class="img">
+        <p></p>
+        <img src="https://images.gsheir.com/arsenal_corners/gifs/back_post_early_arrival_1.gif" alt="Low play quality corner example" class="img">
+        <p>
+            (If you read Part 1, I might have given it away…)
+        </p>
+
+        <h2>
+            Plotting play diagrams
+        </h2>
+        <p>
+            With all the positions and roles collected, I could then plot play diagrams for each corner, which helps greatly with understanding what goes on without watching video every time:
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/corner_paths_page_1.png" alt="Example corner play diagrams" class="img">
+
+        <h2>
+            Clustering similar plays to form groups that I could analyse
+        </h2>
+        <p>
+            The bulk of the work went into this section. In theory, since the data is relatively uncomplicated (a categorical role, and some X-Y coordinates), it shouldn’t be difficult to use well-established clustering techniques to find however many set plays that Arsenal tend to deploy. Of course, the reality isn’t that simple.
+        </p>
+        
+        <h3>
+            K-means
+        </h3>
+        <p>
+            Feeding the data directly into a clustering algorithm (I started with k-means) is sound in principle, but is complicated by the fact that any number of players can be involved in a corner, and they can take any combination of roles, with duplicates and gaps allowed. I used various methods to try to get around this, from only including a fixed number of players at a corner (5), to one-hot encoding of roles (which struggled to learn across players playing the same role but in a different player slot), to aggregating roles before fitting. 
+        </p>
+        <p>
+            It was okay, and managed to get clusters that could make sense if you thought about it long and hard, but ultimately it suffered a bit from a lack of interpretability and control over the clustering process. You can see for yourself if the “average” plays for each cluster make sense, because some do, but most don’t:
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/all_roles_clustered_corner_paths.png" alt="K-means centroid play diagrams" class="img">
+
+        <h3>
+            Similarity score + spectral clustering
+        </h3>
+        <p>
+            The other method I tried, and the method I’m a bit more optimistic about, is defining a similarity scoring system for corners. Corners would have a higher similarity score if equivalent roles had similar start and end positions, while the score would be penalised if there were big differences in the availability of roles. The benefit here is that we can leverage a bit more domain knowledge to give importance to things that we know to matter at corners, and it’s a bit easier to explain why corners ended up in the same cluster:
+        </p>
+        <pre>
+CLUSTER 0 (4 corners)
+----------------------------------------
+Corner IDs: COR-2, COR-9, COR-11, COR-31
+
+Key similarities:
+  • Shot target players (7 total):
+    - Start positions: (41.4, 109.3) - highly consistent
+    - End positions: (36.9, 115.1)
+  • Pass target players (4 total):
+    - Start positions: (39.2, 115.5) - highly consistent
+    - End positions: (36.7, 117.8)
+        </pre>
+
+        <p>
+            Once we have a similarity matrix (i.e. the similarity score for every combination of pairs of corners), then we can use spectral clustering to find the clusters.
+        </p>
+        <img src="https://images.gsheir.com/arsenal_corners/corner_similarity_clustering.png" alt="Similarity matrix and spectral clustering" class="img">
+        <p>
+            Ultimately for the article, I ended up grouping the corners by hand after looking over their play diagrams, but I’d like to get the similarity-based clustering to a point where it’s giving me sensible clusters, even if they are the same ones that I come up with, because then that becomes a very useful scouting tool. Ultimately for the article, I ended up grouping the corners by hand after looking over their play diagrams, but I’d like to get the similarity-based clustering to a point where it’s giving me sensible clusters, even if they are the same ones that I come up with, because then that becomes a very useful scouting tool. 
+        </p>
+
+        <h2>
+            Reflections and tidbits
+        </h2>
+        <ul>
+            <li>Interpretability is still a huge requirement of mine for any metric or analysis method, and I’d really welcome any feedback on the metrics I’ve put forward here, especially if you have a coaching background. As much as the world has become so data-driven these days, sports analysis is one of the few places where everything we do ties directly back to something physical in real life. If you can’t relate a metric to real life scenarios and make real life recommendations from it, it’s not ready.</li>
+            <li>For the data scientists and engineers, here is the GitHub repo: <a href="https://github.com/gsheir/arsenal-corners">https://github.com/gsheir/arsenal-corners</a></li>
+            <li>This took 5 evenings (6 if you count the long walk I spent deciding how I wanted to do this). It’s been great fun. There will be more.</li>
+    </div>
+</article>
+
+{% endblock %}
