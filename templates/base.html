@@ -17,6 +17,7 @@
                 <nav>
                     <ul>
                         <li><a href="{% url 'game:about_me' %}">About Me</a></li>
+                        <li><a href="{% url 'game:cv' %}">My CV</a></li>
                         <li><a href="{% url 'game:blog_home' %}">Blog</a></li>
                         <li><a href="{% url 'game:game_home' %}">Women’s Euro 2025 Game</a></li>
                         {% if user.is_authenticated %}

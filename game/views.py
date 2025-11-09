@@ -62,6 +62,9 @@ class BlogArsenalCornersPart1View(TemplateView):
 class BlogArsenalCornersPart2View(TemplateView):
     template_name = "blog/arsenal_corners_part_2.html"
 
+class CVView(TemplateView):
+    template_name = "about_me/cv.html"
+
 
 class RegisterView(CreateView):
     form_class = UserCreationForm
