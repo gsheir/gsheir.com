@@ -28,6 +28,18 @@ Make sure you [have Docker installed](https://docs.docker.com/desktop/). Then
    docker compose up
    ```
 
+   Note: If Docker complains that port 5432 is in use, it is likely that there is a clash with a Postgres instance running on the host. To solve this, use
+
+   ```
+   sudo lsof -n -i :5432 | grep LISTEN
+   ```
+
+   to list all processes using the port, then kill the PID with
+
+   ```
+   sudo kill -9 [PID]
+   ```
+
 3. Create superuser
    ```bash
    docker compose exec web python manage.py createsuperuser

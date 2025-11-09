@@ -1,0 +1,102 @@
+{% extends 'base.html' %} 
+{% block title %}My CV - gsheir.com{% endblock %} 
+{% block content %}
+
+{% load static %}
+
+<article>
+    <h1>Geoffrey Sheir</h1>
+    <p>I’m a versatile software and AI consultant, who delivers tangible results in high pressure environments across elite sport, healthcare and the wider consulting industry.</p>
+
+    <h2>Experience</h2>
+    <h3>Software and AI Consultant, PA Consulting</h3>
+    <p><em>2021 – Present</em></p>
+
+    <ul>
+        <li>Increased the precision of a smart beard trimmer by 100x using Edge AI.
+            <ul>
+                <li>Deployed a PyTorch convolutional neural network on an STM32 microcontroller using C, achieving sub-50ms latency from inference to motor control.</li>
+                <li>Reduced the latency variance from +/- 20ms to +/- 0.25ms by conducting detailed profiling and optimising the context window and memory layout of the model.</li>
+                <li>Worked with electronic, mechanical and optics engineers to build the prototype, as well as mentoring a software teammate as software lead.</li>
+            </ul>
+        </li>
+        <li>Built a predictive operating theatre scheduling and patient tracking dashboard for the NHS which increased the number of patients treated by 1200 in 3 months.
+            <ul>
+                <li>Designed and implemented a performance monitoring module for our ML model to facilitate long term support. Defined performance metrics which made the model interpretable to clinical staff.</li>
+                <li>Built data pipelines in Python, Databricks and Azure to combine patient data from hospital systems, and created a common data model for all Trusts to increase scalability.</li>
+                <li>Led the technical development of a core module, working with product managers and users to define features, and worked closely with NHS users and technical peers to test the tool.</li>
+            </ul>
+        </li>
+        <li>Deployed a GenAI PoC to automate assessment of environmental impact reports against GOV.UK policy.
+            <ul>
+                <li>Implemented a structured scoring system and used OpenAI foundational models via API to score reports, using quotes from the report as justification.</li>
+                <li>Extracted report metadata and text contents using Apache Tika.</li>
+            </ul>
+        </li>
+        <li>Upskilled 40+ NATO operatives in data and AI through classroom training and workshops.</li>
+        <li>Pitched and won £50k of investment in a hackathon with the British Army to develop a next-gen casualty management app. Deployed the app on a training exercise and received positive feedback from Army users.</li>
+    </ul>
+
+    <h3>1st Team Performance Analyst, Richmond Hockey Club</h3>
+    <p><em>2025 - present</em></p>
+    <ul>
+        <li>Established the club’s first performance analysis workflow, collecting and analysing video and event data for in-game and post-match analysis in the 2nd tier of England Hockey League.</li>
+        <li>Presented weekly match report dashboards and video presentations for head coaches and players.</li>
+    </ul>
+
+    <h2>Education</h2>
+    <h3>Imperial College London: MEng Aeronautical Engineering (1st Class Hon.)</h3>
+    <p><em>2017 – 2021</em></p>
+
+    <ul>
+        <li><strong>Thesis:</strong> Developed deep learning models to classify for arrhythmia-inducing drugs in pig and human hearts
+            <ul>
+                <li>Trained and evaluated PyTorch models using the ResNet architecture, achieving 96% accuracy.</li>
+                <li>Optimised the performance of the model by adjusting hyperparameter and regularisation settings.</li>
+                <li>Used class activation maps to identify features that the model picked up on for interpretabilty.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Volunteering and Personal Projects</h2>
+    <h3>Personal Projects</h3>
+    <ul>
+        <li>Assessed AWFC’s corner routines in 2025-26 using a custom data-driven approach: Read <a href="{% url 'game:blog_arsenal_corners_part_1' %}">here</a>.</li>
+        <li>Analysed AWFC’s pressing shape in the 2024-25 UWCL Final: Read <a href="{% url 'game:blog_arsenal_press_part_1' %}">here</a>.</li>
+        <li>Created visualisations using Statsbomb Open WSL data: View on GitHub: <a href="https://github.com/gsheir/tacticvis">gsheir/tacticvis</a>.</li>
+    </ul>
+    <h3>Women's Club Coach, Cambridge City Hockey Club</h3>
+    <p><em>2023 – 2025</em></p>
+    <ul>
+        <li>Coached our Women's 6th and 7th teams to top 3 finishes in their respective leagues, working with players aged 14-70, delivering weekly training sessions and coaching games from the sideline on a matchday.</li>
+        <li>Guided players through goal setting and creating individual development plans to improve their hockey.</li>
+    </ul>
+
+    <h2>Technologies</h2>
+    <ul>
+        <li>
+            <strong>Programming languages:</strong> Python, C, C++
+        </li>
+        <li>
+            <strong>Machine learning and data science:</strong> PyTorch, Tensorflow, Scikit Learn, Pandas, STMCubeAI
+        </li>
+        <li>
+            <strong>Data pipelines and engineering:</strong> SQL, Luigi, Databricks, Azure Data Factory
+        </li>
+        <li>
+            <strong>Visualisation and frontend:</strong> Streamlit, Django, Marimo
+        </li>
+        <li>
+            <strong>Cloud:</strong> Azure (VMs and blob storage), GCP (serverless)
+        </li>
+        <li>
+            <strong>Software development tools:</strong> Test-driven development (pytest, Hypothesis), CI/CD, Git, GitHub Copilot
+        </li>
+        <li>
+            <strong>Embedded and small form factor:</strong> STM32, Nvidia Jetson, Raspberry Pi
+        </li>
+    </ul>
+</article>
+
+
+{% endblock %}
