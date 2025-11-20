@@ -1,82 +1,31 @@
 # gsheir.com
 
-My personal website to host portfolios and random games.
+Personal portfolio website for Geoffrey Sheir.
 
 ## Deployment
 
 ### Railway
 
-This application is deployed and hosted with Railway. Currently this is configured via the Railway dashboard, but I am hoping to move to IaC soon. 
+This application is deployed and hosted with Railway. The application is available at [gsheir.com](https://gsheir.com).
 
-The application is available on gsheir.com
+### Local Development
 
-### Local development
+A Docker Compose configuration is provided for local development.
 
-A Docker Compose configuration is provided for local development, which will spin up the services required (including the database). 
+Prerequisites:
+- [Docker Desktop](https://docs.docker.com/desktop/) installed and running
 
-To set up:
-
-Make sure you [have Docker installed](https://docs.docker.com/desktop/). Then
+Setup:
 
 1. Copy environment variables to local `.env`
    ```bash
    cp .env.example .env
    ```
 
-2. Run Docker Compose configuration
+2. Run Docker Compose
    ```bash
    docker compose up
    ```
 
-   Note: If Docker complains that port 5432 is in use, it is likely that there is a clash with a Postgres instance running on the host. To solve this, use
-
-   ```
-   sudo lsof -n -i :5432 | grep LISTEN
-   ```
-
-   to list all processes using the port, then kill the PID with
-
-   ```
-   sudo kill -9 [PID]
-   ```
-
-3. Create superuser
-   ```bash
-   docker compose exec web python manage.py createsuperuser
-   ```
-
    The web app will be available at `http://localhost:8080/`
 
-## Women’s Euro 2025 game
-
-This project presents a fantasy draft game for the Women’s Euro 2025, where participants can create and join leagues to compete against friends. 
-
-![](./static/league.png)
-
-![](./static/selection.png)
-
-### Sync with FBRef API
-
-This application syncs with [FBR API](https://fbrapi.com/) for football data (although not all data is pulled from FBR API due to some bugs with the API). To sync, use
-
-```bash
-docker compose exec web python manage.py sync_fbr_data
-```
-
-### Process Round Results
-
-Calculate points and update team selections:
-
-```bash
-docker compose exec web python manage.py process_round
-```
-
-### Admin Interface
-
-Access the admin interface at `/admin/` to:
-- Manage users, leagues, and teams
-- Input match results manually
-
-## License
-
-This project is for personal use.
