@@ -1,60 +1,31 @@
-[tool.poetry]
-name = "weuro2025-game"
+[project]
+name = "gsheir.com"
 version = "0.1.0"
-description = "Women's Euro 2025 prediction game built with Django"
-authors = ["gsheir <gsheir@outlook.com>"]
+description = "Personal portfolio website for Geoffrey Sheir."
+authors = [{ name = "gsheir", email = "gsheir@outlook.com" }]
+requires-python = ">=3.9,<4"
 readme = "README.md"
-packages = [{include = "game"}, {include = "weuro2025"}]
+dependencies = [
+    "django>=4.2.7,<5",
+    "psycopg2-binary>=2.9.7,<3",
+    "requests>=2.31.0,<3",
+    "python-decouple>=3.8,<4",
+    "whitenoise>=6.6.0,<7",
+    "gunicorn>=21.2.0,<22",
+    "django-cors-headers>=4.3.1,<5",
+    "dj-database-url>=2.1.0,<3",
+    "jupyter>=1.1.1,<2",
+    "pandas>=2.3.0,<3",
+    "lxml>=6.0.0,<7",
+    "ruff>=0.14.5",
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-django = "^4.2.7"
-psycopg2-binary = "^2.9.7"
-requests = "^2.31.0"
-python-decouple = "^3.8"
-whitenoise = "^6.6.0"
-gunicorn = "^21.2.0"
-django-cors-headers = "^4.3.1"
-dj-database-url = "^2.1.0"
-jupyter = "^1.1.1"
-pandas = "^2.3.0"
-lxml = "^6.0.0"
+[dependency-groups]
+dev = [
+    "black>=24.0.0,<25",
+    "isort>=5.12.0,<6",
+    "flake8>=6.0.0,<7",
+    "pytest>=7.4.0,<8",
+    "pytest-django>=4.5.2,<5",
+]
 
-[tool.poetry.group.dev.dependencies]
-black = "^24.0.0"
-isort = "^5.12.0"
-flake8 = "^6.0.0"
-pytest = "^7.4.0"
-pytest-django = "^4.5.2"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.black]
-line-length = 88
-target-version = ['py39']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
-
-[tool.isort]
-profile = "black"
-multi_line_output = 3
-line_length = 88
-known_django = "django"
-known_first_party = "game,weuro2025"
-sections = ["FUTURE", "STDLIB", "THIRDPARTY", "DJANGO", "FIRSTPARTY", "LOCALFOLDER"]

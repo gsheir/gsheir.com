@@ -13,18 +13,12 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="{% url 'game:home' %}" class="logo">gsheir</a>
+                <a href="{% url 'app:home' %}" class="logo">gsheir</a>
                 <nav>
                     <ul>
-                        <li><a href="{% url 'game:about_me' %}">About Me</a></li>
-                        <li><a href="{% url 'game:cv' %}">My CV</a></li>
-                        <li><a href="{% url 'game:blog_home' %}">Blog</a></li>
-                        <li><a href="{% url 'game:game_home' %}">Women’s Euro 2025 Game</a></li>
-                        {% if user.is_authenticated %}
-                            <li><a href="{% url 'game:logout' %}">Logout ({{ user.username }})</a></li>
-                        {% else %}
-                            <li><a href="{% url 'game:login' %}">Login</a></li>
-                        {% endif %}
+                        <li><a href="{% url 'app:about_me' %}">About Me</a></li>
+                        <li><a href="{% url 'app:cv' %}">My CV</a></li>
+                        <li><a href="{% url 'app:blog_home' %}">Blog</a></li>
                     </ul>
                 </nav>
             </div>

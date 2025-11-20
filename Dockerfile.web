@@ -1,53 +1,21 @@
-# Use Python 3.11 slim image
-FROM python:3.11-slim
+FROM python:3.13-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV POETRY_NO_INTERACTION=1
-ENV POETRY_VENV_IN_PROJECT=0
-ENV POETRY_VIRTUALENVS_CREATE=false
-ENV POETRY_CACHE_DIR=/opt/poetry_cache
-
-# Declare environment variables for Railway
-ARG CSRF_TRUSTED_ORIGINS
-ARG DATABASE_URL
-
-# Set work directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        postgresql-client \
-        gcc \
-        python3-dev \
-        musl-dev \
-        curl \
-    && rm -rf /var/lib/apt/lists/*
+# Install uv
+RUN pip install uv
 
 # Copy dependency files
-COPY pyproject.toml poetry.lock* requirements.txt ./
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
-# Install dependencies - try Poetry first, fallback to pip
-RUN pip install poetry==1.8.3 && \
-    poetry config virtualenvs.create false && \
-    poetry config virtualenvs.in-project false && \
-    (poetry install --only=main --no-root || pip install -r requirements.txt) && \
-    rm -rf $POETRY_CACHE_DIR
-
-# Copy project
-COPY . /app/
-
-# Create a non-root user
-RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
-USER appuser
+# Copy application
+COPY . .
 
 # Collect static files 
-RUN poetry run python manage.py collectstatic --noinput
+RUN uv run python manage.py collectstatic --noinput
 
-# Expose port (Railway will set PORT environment variable)
-EXPOSE 8080
+EXPOSE 8000
 
 # Run migrations and start gunicorn
-ENTRYPOINT ["sh", "-c", "python manage.py migrate && gunicorn --bind [::]:${PORT:-8080} weuro2025.wsgi:application" ] 
+ENTRYPOINT ["sh", "-c", "uv run gunicorn --bind [::]:${PORT:-8080} --workers 2 --threads 2 --timeout 120 project.wsgi:application" ] 
