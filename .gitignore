@@ -63,3 +63,5 @@ db.sqlite3
 
 # Node modules (if using any frontend build tools)
 node_modules/
+
+.ruff_cache/

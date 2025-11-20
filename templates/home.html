@@ -1,26 +1,148 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Hello - gsheir.com{% endblock %}
 
 {% block content %}
-<div class="body">
-    <h1 class="huge-text">Hi, I’m Geoff.</h1>
-    <p class="mb-3">This is where I build random stuff.</p>
-</div>
-
-<div class="grid grid-2">
-    <div class="card">
-        <h3>About Me</h3>
-        <p class="mb-3">I'm a data scientist, engineer and sports performance analyst.</p>
-        <a href="{% url 'app:about_me' %}" class="btn">Learn More</a>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text fade-in">
+                <h1 class="gradient-text">Hi, I’m Geoff.</h1>
+                <p class="hero-subtitle">I’m a full stack data scientist, engineer, and sports performance analyst.</p>
+                <div class="hero-cta">
+                    <a href="{% url 'app:about_me' %}" class="btn btn-primary">About Me</a>
+                    <a href="{% url 'app:blog_home' %}" class="btn btn-secondary">Read My Blog</a>
+                </div>
+            </div>
+            <div class="hero-image fade-in-delayed">
+                <div class="image-wrapper">
+                    <img src="https://images.gsheir.com/about_me/geoff_transparent.png" alt="Geoff Sheir" />
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card">
-        <h3>Blog</h3>
-        <p class="mb-3">Reflections on data, sports analytics and software engineering.</p>
-        <a href="{% url 'app:blog_home' %}" class="btn">Read More</a>
+    <div class="scroll-indicator">
+        <div class="scroll-arrow"></div>
     </div>
+</section>
 
-    
+<!-- About Section -->
+<section class="section about-section">
+    <div class="container">
+        <!-- <div class="section-content fade-in-scroll">
+            <div class="glass-card">
+                <h2>About Me</h2>
+                <p class="lead">I’m passionate about using data to solve complex problems in sports analytics and beyond. With expertise in machine learning, statistical modeling, and software engineering, I help teams make better decisions through data-driven insights.</p>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number gradient-text">10+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number gradient-text">50+</div>
+                        <div class="stat-label">Projects Delivered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number gradient-text">5</div>
+                        <div class="stat-label">Sports Analyzed</div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</section>
+
+<!-- Projects Spotlight -->
+<section class="section projects-section">
+    <div class="container">
+        <h2 class="section-title fade-in-scroll">Projects & Tools</h2>
+        <p class="section-subtitle fade-in-scroll">Interactive tools that you can use right now</p>
+        
+        <div class="projects-grid fade-in-scroll">
+            <div class="project-card featured">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <h3>XML Translator</h3>
+                </div>
+                <div class="project-content">
+                    <p class="project-description">A tool to translate hockey XML event data for the Hoofdklasse. </p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Data Engineering</span>
+                        <span class="tag">Event Data</span>
+                    </div>
+                </div>
+                <a href="#" class="btn btn-accent">Explore Tool →</a>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Content -->
+<section class="section content-section">
+    <div class="container">
+        <h2 class="section-title fade-in-scroll">Featured Analysis</h2>
+        <p class="section-subtitle fade-in-scroll">Deep dives and blog posts</p>
+        
+        <div class="content-grid fade-in-scroll">
+            <article class="content-card">
+                <div class="card-badge">Sports Analytics</div>
+                <h3>Arsenal Women’s Attacking Corners</h3>
+                <p>Assessing and improving Arsenal Women’s attacking corners using a data-driven approach.</p>
+                <a href="{% url 'app:blog_arsenal_corners_part_1' %}" class="card-link">Read Analysis →</a>
+            </article>
+
+            <article class="content-card">
+                <div class="card-badge">Coaching</div>
+                <h3>Reflecting on my first year coaching hockey</h3>
+                <p>Working with the Women's 6s and 7s at Cambridge City Hockey Club.</p>
+                <a href="{% url 'app:blog_coaching' %}" class="card-link">Explore Data →</a>
+            </article>
+
+            <article class="content-card">
+                <div class="card-badge">Software Engineering</div>
+                <h3>Building this site with AI</h3>
+                <p>How I ended up building gsheir.com and a Women's Euro 2025 fantasy football game using AI-assisted coding.</p>
+                <a href="{% url 'app:blog_fantasy_football' %}" class="card-link">Learn More →</a>
+            </article>
+        </div>
+    </div>
+</section>
 
 
+
+<!-- Contact Section -->
+<section class="section contact-section">
+    <div class="container">
+        <div class="contact-content fade-in-scroll">
+            <h2>Let’s chat</h2>
+            
+            <div class="contact-links">
+                <a href="https://github.com/gsheir/gsheir.com" class="contact-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                    <span>GitHub</span>
+                </a>
+                <a href="https://linkedin.com/in/gsheir" class="contact-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                    <span>LinkedIn</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
