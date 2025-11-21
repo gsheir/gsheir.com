@@ -4,91 +4,66 @@
 
 {% block content %}
 
-<div class="body">
-    <h1>Blog</h1>
-</div>
-
-<div class="card">
-    <div class="flex-between mb-2">
-        <div>
-            <h3>Part 2: A data driven approach to corner analysis and assessment</h3>
-            <p>I watched 50 corners so you don’t have to.</p>
-            <p></p>
-            <p class="text-muted">Posted on 20th October 2025</p>
-        </div>
-        <div>
-             <a href="{% url 'app:blog_arsenal_corners_part_2' %}" class="btn">Read More</a>
+<!-- Hero Section -->
+<section class="mini-hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text fade-in" style="text-align: center;">
+                <h1 class="gradient-text">Blog</h1>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
-<div class="card">
-    <div class="flex-between mb-2">
-        <div>
-            <h3>Part 1: Assessing and improving Arsenal Women’s attacking corners using data</h3>
-            <p>Why do Arsenal run so many front post corner routines, and how can we use data to assess how good they are at it?</p>
-            <p></p>
-            <p class="text-muted">Posted on 20th October 2025</p>
-        </div>
-        <div>
-             <a href="{% url 'app:blog_arsenal_corners_part_1' %}" class="btn">Read More</a>
+<!-- Blog Posts Section -->
+<section class="section content-section">
+    <div class="container">
+        <div style="max-width: 900px; margin: 0 auto;">
+            
+            <div class="content-card fade-in-scroll" style="margin-bottom: var(--spacing-md);">
+                <div class="card-badge">October 2025</div>
+                <h3>Part 2: A data driven approach to corner analysis and assessment</h3>
+                <p>I watched 50 corners so you don't have to.</p>
+                <a href="{% url 'app:blog_arsenal_corners_part_2' %}" class="btn btn-primary">Read More →</a>
+            </div>
+
+            <div class="content-card fade-in-scroll" style="margin-bottom: var(--spacing-md);">
+                <div class="card-badge">October 2025</div>
+                <h3>Part 1: Assessing and improving Arsenal Women's attacking corners using data</h3>
+                <p>Why do Arsenal run so many front post corner routines, and how can we use data to assess how good they are at it?</p>
+                <a href="{% url 'app:blog_arsenal_corners_part_1' %}" class="btn btn-primary">Read More →</a>
+            </div>
+
+            <div class="content-card fade-in-scroll" style="margin-bottom: var(--spacing-md);">
+                <div class="card-badge">August 2025</div>
+                <h3>Part 2: My (very beginner) video analysis process for Arsenal's high press</h3>
+                <p>I talk through why I picked the press and the process behind the analysis.</p>
+                <a href="{% url 'app:blog_arsenal_press_part_2' %}" class="btn btn-primary">Read More →</a>
+            </div>
+
+            <div class="content-card fade-in-scroll" style="margin-bottom: var(--spacing-md);">
+                <div class="card-badge">August 2025</div>
+                <h3>Part 1: Breaking down Arsenal's high press in the Champions League final</h3>
+                <p>Arsenal Women came into their Champions League final with the knowledge that they needed to be on top form to beat Barcelona's pass-heavy style. The good thing is, Arsenal aren't half bad at pressing high.</p>
+                <a href="{% url 'app:blog_arsenal_press_part_1' %}" class="btn btn-primary">Read More →</a>
+            </div>
+
+            <div class="content-card fade-in-scroll" style="margin-bottom: var(--spacing-md);">
+                <div class="card-badge">July 2025</div>
+                <h3>Reflecting on my first year coaching hockey</h3>
+                <p>Working with the Women's 6s and 7s at Cambridge City Hockey Club</p>
+                <a href="{% url 'app:blog_coaching' %}" class="btn btn-primary">Read More →</a>
+            </div>
+
+            <div class="content-card fade-in-scroll">
+                <div class="card-badge">July 2025</div>
+                <h3>I built a fantasy football game (and portfolio site) with AI, and it was actually good</h3>
+                <p>How I ended up building gsheir.com using AI-assisted coding.</p>
+                <a href="{% url 'app:blog_fantasy_football' %}" class="btn btn-primary">Read More →</a>
+            </div>
+
         </div>
     </div>
-</div>
-
-<div class="card">
-    <div class="flex-between mb-2">
-        <div>
-            <h3>Part 2: My (very beginner) video analysis process for Arsenal’s high press</h3>
-            <p>I talk through why I picked the press and the process behind the analysis.</p>
-            <p></p>
-            <p class="text-muted">Posted on 7th August 2025</p>
-        </div>
-        <div>
-             <a href="{% url 'app:blog_arsenal_press_part_2' %}" class="btn">Read More</a>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="flex-between mb-2">
-        <div>
-            <h3>Part 1: Breaking down Arsenal’s high press in the Champions League final</h3>
-            <p>Arsenal Women came into their Champions League final with the knowledge that they needed to be on top form to beat Barcelona’s pass-heavy style. The good thing is, Arsenal aren’t half bad at pressing high.</p>
-            <p class="text-muted">Posted on 7th August 2025</p>
-        </div>
-        <div>
-             <a href="{% url 'app:blog_arsenal_press_part_1' %}" class="btn">Read More</a>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="flex-between mb-2">
-        <div>
-            <h3>Reflecting on my first year coaching hockey</h3>
-            <p>Working with the Women's 6s and 7s at Cambridge City Hockey Club</p>
-            <p class="text-muted">Posted on 17th July 2025</p>
-        </div>
-        <div>
-             <a href="{% url 'app:blog_coaching' %}" class="btn">Read More</a>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="flex-between mb-2">
-        <div>
-            <h3>I built a fantasy football game (and portfolio site) with AI, and it was actually good</h3>
-            <p>How I ended up building gsheir.com using AI-assisted coding.</p>
-            <p class="text-muted">Posted on 9th July 2025</p>
-        </div>
-        <div>
-             <a href="{% url 'app:blog_fantasy_football' %}" class="btn">Read More</a>
-        </div>
-    </div>
-</div>
-
-
+</section>
 
 {% endblock %}
