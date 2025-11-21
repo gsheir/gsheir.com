@@ -1,22 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}About me - gsheir.com{% endblock %}
 
 {% block content %}
 
-{% load static %}
-
-<div class="grid grid-2">
-    <div class="body">
-        <h1>About me</h1>
-        <p class="mb-3">I’m a versatile software and AI consultant, who delivers tangible results in high pressure environments across elite sport, healthcare and the wider consulting industry.</p>
-        <p class="mb-3">Alongside my day job, I am the Men's 1st Team Performance Analyst at Richmond Hockey Club, performing both live and post-match analysis in the 2nd tier of England Hockey League.</p>
-        <p class="mb-3">I hold a 1st Class Engineering degree from Imperial College London, where for my masters thesis in cardiac research, I developed deep learning models to classify for arrhythmia-inducing drugs in pig and human hearts.</p>
+<!-- Hero Section -->
+<section class="mini-hero">
+    <div class="container">
+        <div class="hero-content" style="grid-template-columns: 1fr;">
+            <div class="hero-text fade-in" style="text-align: center;">
+                <h1 class="gradient-text">About Me</h1>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="img">
-        <img src="https://images.gsheir.com/about_me/geoff.jpg" alt="Profile Image" class="img">
+<!-- Main Content Section -->
+<section class="section content-section">
+    <div class="container">
+        <div class="content-grid fade-in-scroll" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+            <article class="content-card">
+                <div class="card-badge">Current Work</div>
+                <h3>PA Consulting</h3>
+                <p>I'm a versatile software and AI consultant, who delivers tangible results in high pressure environments across elite sport, healthcare and the wider consulting industry.</p>
+            </article>
+
+            <article class="content-card">
+                <div class="card-badge">Sports Analytics</div>
+                <h3>Richmond Hockey Club</h3>
+                <p>I am the Men's 1st Team Performance Analyst, performing both live and post-match analysis in the 2nd tier of the England Hockey League.</p>
+            </article>
+
+            <article class="content-card">
+                <div class="card-badge">Education</div>
+                <h3>Academic Background</h3>
+                <p>1st Class Engineering degree from Imperial College London. Masters thesis in cardiac research developing deep learning models to classify arrhythmia-inducing drugs.</p>
+            </article>
+        </div>
     </div>
-</div>
+</section>
+
+<!-- Image Section -->
+<section class="section about-section">
+    <div class="container">
+        <div class="section-content fade-in-scroll">
+            <img src="https://images.gsheir.com/about_me/geoff.jpg" alt="Geoff Sheir" style="max-width: 500px; width: 100%; height: auto; border-radius: var(--radius-lg); margin: 0 auto; display: block;" />
+        </div>
+    </div>
+</section>
 
 {% endblock %}
