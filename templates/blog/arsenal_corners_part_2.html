@@ -26,7 +26,7 @@
         <div class="article-content">
             <p>
                 <em>
-                    This is a companion piece to <a href="{% url 'app:blog_arsenal_corners_part_1' %}">Part 1: Assessing and improving Arsenal Women's attacking corners using data</a>.
+                    This is a companion piece to <a href="{% url 'app:blog_arsenal_corners_part_1' %}">Part 1: Assessing and improving Arsenal Women’s attacking corners using data</a>.
                 </em>
             </p>
             <p>
@@ -36,10 +36,10 @@
             </p>
 
             <p>
-                While this piece was triggered by what I saw at the Brighton game last week, I've been wanting to do some longitudinal analysis on Arsenal's season, particularly right now when we haven't had the greatest of starts to the season. But hey, that means there's more opportunity to make gains. 
+                While this piece was triggered by what I saw at the Brighton game last week, I've been wanting to do some longitudinal analysis on Arsenal’s season, particularly right now when we haven't had the greatest of starts to the season. But hey, that means there’s more opportunity to make gains. 
             </p>
             <p>
-                The answer to "why are we losing games" can be very broad, and for a piece like this, fixing everything isn't the point. At Richmond Hockey Club, where I am the Men's 1st Team Performance Analyst, I've learnt that focusing on a small section of the game, finding something actionable and evidencing it well is much better than broad brush strokes, and it gives me the foundation to build the team's trust in the numbers. 
+                The answer to "why are we losing games" can be very broad, and for a piece like this, fixing everything isn't the point. At Richmond Hockey Club, where I am the Men’s 1st Team Performance Analyst, I've learnt that focusing on a small section of the game, finding something actionable and evidencing it well is much better than broad brush strokes, and it gives me the foundation to build the team’s trust in the numbers. 
             </p>
             <p>
                 For corners, which is a particularly self-contained and repeatable part of the game, I went about it as follows:
@@ -62,7 +62,7 @@
             </p>
             <ul>
                 <li><strong>Start position</strong>: Right before the corner taker begins her run-up. My hypothesis (which was confirmed after watching a few clips) was that the players don't tend to have multiple phases of movement, in what would be known as a pre-snap motion in American football (e.g. drifting for 10 metres before changing direction to make their final run). Therefore this definition is fine.</li>
-                <li><strong>End position</strong>: When the ball arrives at the target area. This is usually quite clear cut (e.g. about to land on the attacker's head), but some judgement is needed for deliveries that clearly didn't go to where they were supposed to go, because players will check their runs when they see that happening. Since the purpose is to capture the intent of the play, picking a slightly earlier point in time usually provides enough information as to where the player was aiming for.</li>
+                <li><strong>End position</strong>: When the ball arrives at the target area. This is usually quite clear cut (e.g. about to land on the attacker’s head), but some judgement is needed for deliveries that clearly didn't go to where they were supposed to go, because players will check their runs when they see that happening. Since the purpose is to capture the intent of the play, picking a slightly earlier point in time usually provides enough information as to where the player was aiming for.</li>
             </ul>
             
             <img src="https://images.gsheir.com/arsenal_corners/corner_zones.png" alt="Corner zones for data collection" style="width: 100%; border-radius: var(--radius-md); margin: var(--spacing-md) 0;">
@@ -80,7 +80,7 @@
                 For every player, the metric is the probability of them being able to take a shot on goal. If there was no one around them and the delivery was perfect, this would be 1. This is tempered by their role and how they are marked. Where more detailed data is available, this could also include a physical metric (e.g. <a href="https://www.hudl.com/blog/introducing-hops-a-new-way-to-evaluate-heading-ability">HOPS</a> or velocity), but I don't have that right now.
             </p>
             <p>
-                Each player is assigned a role, based on what I could infer from their movement in the video. Each player is also assigned a marking score, which is how tightly they were marked at the end of their movement. The scores are multiplied to give the player's score, and the sum of the scores is the score for that corner.
+                Each player is assigned a role, based on what I could infer from their movement in the video. Each player is also assigned a marking score, which is how tightly they were marked at the end of their movement. The scores are multiplied to give the player’s score, and the sum of the scores is the score for that corner.
             </p>
             
             <table class="table">
@@ -177,7 +177,7 @@
             </p>
             <ul>
                 <li>Since I am using broadcast data, players that are out of shot won't have any data collected on them. This unfortunately means that some corners had incomplete data (sometimes severely so), and they had to be discarded. In a club setting, analysts will have tactical cameras which should solve this issue.</li>
-                <li>This metric is currently a subjective metric, in the sense that it requires a human to categorise each player's actions. For roles, those in the know (i.e. Arsenal staff) can directly map this to their plan, but those not in the know (e.g. opposition analysts) will just have to guess. For the marking type, one can imagine a world where highly detailed computer vision (e.g. using pose estimation) and tracking data might be able to automate this, but that's still a big "might", and it probably isn't quite here yet.</li>
+                <li>This metric is currently a subjective metric, in the sense that it requires a human to categorise each player’s actions. For roles, those in the know (i.e. Arsenal staff) can directly map this to their plan, but those not in the know (e.g. opposition analysts) will just have to guess. For the marking type, one can imagine a world where highly detailed computer vision (e.g. using pose estimation) and tracking data might be able to automate this, but that’s still a big "might", and it probably isn't quite here yet.</li>
             </ul>
             <p>
                 Does this metric work in practice? To see for yourself, here are two corners, one got a very high score (2.945) and the other got a very low score (0.625). Ask yourself – if the delivery was perfect, how likely would Arsenal have scored? 
@@ -219,20 +219,20 @@
             <h3>Similarity score + spectral clustering</h3>
             
             <p>
-                The other method I tried, and the method I'm a bit more optimistic about, is defining a similarity scoring system for corners. Corners would have a higher similarity score if equivalent roles had similar start and end positions, while the score would be penalised if there were big differences in the availability of roles. The benefit here is that we can leverage a bit more domain knowledge to give importance to things that we know to matter at corners, and it's a bit easier to explain why corners ended up in the same cluster:
+                The other method I tried, and the method I’m a bit more optimistic about, is defining a similarity scoring system for corners. Corners would have a higher similarity score if equivalent roles had similar start and end positions, while the score would be penalised if there were big differences in the availability of roles. The benefit here is that we can leverage a bit more domain knowledge to give importance to things that we know to matter at corners, and it’s a bit easier to explain why corners ended up in the same cluster:
             </p>
             <pre>
-    CLUSTER 0 (4 corners)
-    ----------------------------------------
-    Corner IDs: COR-2, COR-9, COR-11, COR-31
+CLUSTER 0 (4 corners)
+----------------------------------------
+Corner IDs: COR-2, COR-9, COR-11, COR-31
 
-    Key similarities:
-    • Shot target players (7 total):
-        - Start positions: (41.4, 109.3) - highly consistent
-        - End positions: (36.9, 115.1)
-    • Pass target players (4 total):
-        - Start positions: (39.2, 115.5) - highly consistent
-        - End positions: (36.7, 117.8)
+Key similarities:
+• Shot target players (7 total):
+    - Start positions: (41.4, 109.3) - highly consistent
+    - End positions: (36.9, 115.1)
+• Pass target players (4 total):
+    - Start positions: (39.2, 115.5) - highly consistent
+    - End positions: (36.7, 117.8)
             </pre>
 
             <p>
@@ -242,15 +242,15 @@
             <img src="https://images.gsheir.com/arsenal_corners/corner_similarity_clustering.png" alt="Similarity matrix and spectral clustering" style="width: 100%; border-radius: var(--radius-md); margin: var(--spacing-md) 0;">
             
             <p>
-                Ultimately for the article, I ended up grouping the corners by hand after looking over their play diagrams, but I'd like to get the similarity-based clustering to a point where it's giving me sensible clusters, even if they are the same ones that I come up with, because then that becomes a very useful scouting tool. 
+                Ultimately for the article, I ended up grouping the corners by hand after looking over their play diagrams, but I'd like to get the similarity-based clustering to a point where it’s giving me sensible clusters, even if they are the same ones that I come up with, because then that becomes a very useful scouting tool. 
             </p>
 
             <h2>Reflections and tidbits</h2>
             
             <ul>
-                <li>Interpretability is still a huge requirement of mine for any metric or analysis method, and I'd really welcome any feedback on the metrics I've put forward here, especially if you have a coaching background. As much as the world has become so data-driven these days, sports analysis is one of the few places where everything we do ties directly back to something physical in real life. If you can't relate a metric to real life scenarios and make real life recommendations from it, it's not ready.</li>
+                <li>Interpretability is still a huge requirement of mine for any metric or analysis method, and I'd really welcome any feedback on the metrics I've put forward here, especially if you have a coaching background. As much as the world has become so data-driven these days, sports analysis is one of the few places where everything we do ties directly back to something physical in real life. If you can't relate a metric to real life scenarios and make real life recommendations from it, it’s not ready.</li>
                 <li>For the data scientists and engineers, here is the GitHub repo: <a href="https://github.com/gsheir/arsenal-corners">https://github.com/gsheir/arsenal-corners</a></li>
-                <li>This took 5 evenings (6 if you count the long walk I spent deciding how I wanted to do this). It's been great fun. There will be more.</li>
+                <li>This took 5 evenings (6 if you count the long walk I spent deciding how I wanted to do this). It’s been great fun. There will be more.</li>
             </ul>
         </div>
     </div>
