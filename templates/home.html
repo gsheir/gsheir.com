@@ -13,7 +13,7 @@
                 <p class="hero-subtitle">I’m a full stack data scientist, engineer, and sports performance analyst.</p>
                 <div class="hero-cta">
                     <a href="{% url 'app:about_me' %}" class="btn btn-primary">About Me</a>
-                    <a href="{% url 'app:blog_home' %}" class="btn btn-secondary">Read My Blog</a>
+                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
                 </div>
             </div>
             <div class="hero-image fade-in-delayed">
@@ -104,16 +104,20 @@
             <article class="content-card">
                 <div class="card-badge">Coaching</div>
                 <h3>Reflecting on my first year coaching hockey</h3>
-                <p>Working with the Women's 6s and 7s at Cambridge City Hockey Club.</p>
+                <p>Working with the Women’s 6s and 7s at Cambridge City Hockey Club.</p>
                 <a href="{% url 'app:blog_coaching' %}" class="card-link">Explore Data →</a>
             </article>
 
             <article class="content-card">
                 <div class="card-badge">Software Engineering</div>
                 <h3>Building this site with AI</h3>
-                <p>How I ended up building gsheir.com and a Women's Euro 2025 fantasy football game using AI-assisted coding.</p>
+                <p>How I ended up building gsheir.com and a Women’s Euro 2025 fantasy football game using AI-assisted coding.</p>
                 <a href="{% url 'app:blog_fantasy_football' %}" class="card-link">Learn More →</a>
             </article>
+        </div>
+        
+        <div style="text-align: center; margin-top: var(--spacing-lg);" class="fade-in-scroll">
+            <a href="{% url 'app:blog_home' %}" class="btn btn-primary">View All →</a>
         </div>
     </div>
 </section>
@@ -121,7 +125,7 @@
 
 
 <!-- Contact Section -->
-<section class="section contact-section">
+<section id="contact" class="section contact-section">
     <div class="container">
         <div class="contact-content fade-in-scroll">
             <h2>Let’s chat</h2>
