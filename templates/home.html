@@ -57,8 +57,7 @@
 <!-- Projects Spotlight -->
 <section class="section projects-section">
     <div class="container">
-        <h2 class="section-title fade-in-scroll">Projects and tools</h2>
-        <p class="section-subtitle fade-in-scroll">Stuff you can play with right now</p>
+        <h2 class="section-title fade-in-scroll">Projects</h2>
         
         <div class="projects-grid fade-in-scroll">
             <div class="project-card featured">
@@ -72,7 +71,7 @@
                     <h3>XML Translator</h3>
                 </div>
                 <div class="project-content">
-                    <p class="project-description">A tool to translate hockey XML event data for the Hoofdklasse. </p>
+                    <p class="project-description">A tool to translate hockey XML event data. </p>
                     <div class="project-tags">
                         <span class="tag">Python</span>
                         <span class="tag">Data Engineering</span>
@@ -95,10 +94,17 @@
         
         <div class="content-grid fade-in-scroll">
             <article class="content-card">
-                <div class="card-badge">Sports Analytics</div>
+                <div class="card-badge">Data Analysis</div>
                 <h3>Arsenal Women’s Attacking Corners</h3>
                 <p>Assessing and improving Arsenal Women’s attacking corners using a data-driven approach.</p>
                 <a href="{% url 'app:blog_arsenal_corners_part_1' %}" class="card-link">Read Analysis →</a>
+            </article>
+
+            <article class="content-card">
+                <div class="card-badge">Video Analysis</div>
+                <h3>Arsenal Women’s High Press</h3>
+                <p>Breaking down Arsenal’s high press in the Champions League final.</p>
+                <a href="{% url 'app:blog_arsenal_press_part_1' %}" class="card-link">Read Analysis →</a>
             </article>
 
             <article class="content-card">
@@ -108,12 +114,6 @@
                 <a href="{% url 'app:blog_coaching' %}" class="card-link">Explore Data →</a>
             </article>
 
-            <article class="content-card">
-                <div class="card-badge">Software Engineering</div>
-                <h3>Building this site with AI</h3>
-                <p>How I ended up building gsheir.com and a Women’s Euro 2025 fantasy football game using AI-assisted coding.</p>
-                <a href="{% url 'app:blog_fantasy_football' %}" class="card-link">Learn More →</a>
-            </article>
         </div>
         
         <div style="text-align: center; margin-top: var(--spacing-lg);" class="fade-in-scroll">
