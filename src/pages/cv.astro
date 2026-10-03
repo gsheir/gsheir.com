@@ -1,0 +1,57 @@
+---
+import { getEntry, render } from "astro:content";
+
+import CopyMarkdown from "../components/CopyMarkdown.astro";
+import PageHero from "../components/PageHero.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const cv = await getEntry("pages", "cv");
+if (!cv) throw new Error("Missing src/content/pages/cv.md");
+const { Content } = await render(cv);
+---
+
+<BaseLayout title={cv.data.title} description={cv.data.description} markdownUrl="/cv.md">
+  <PageHero title={cv.data.title} />
+
+  <section class="pb-20 sm:pb-24">
+    <div class="mx-auto max-w-3xl px-4 sm:px-8">
+      <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <CopyMarkdown markdownUrl="/cv.md" pageUrl={Astro.url.href} />
+        <button
+          type="button"
+          onclick="window.print()"
+          class="no-print cursor-pointer text-sm font-medium text-ink-muted underline-offset-4 hover:text-primary hover:underline"
+        >
+          Print or save as PDF
+        </button>
+      </div>
+      <article class="cv prose max-w-none rounded-xl border border-line bg-card p-6 shadow-soft sm:prose-lg sm:p-10">
+        <h2 class="mt-0!">{cv.data.name}</h2>
+        {cv.data.summary && <p class="lead">{cv.data.summary}</p>}
+        <Content />
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cv :global(h3 + p > em:only-child) {
+    color: var(--ink-subtle);
+    font-size: 0.9em;
+  }
+
+  @media print {
+    :global(body) {
+      font-size: 11pt;
+      background: white;
+    }
+    :global(main > section:first-child) {
+      display: none;
+    }
+    .cv {
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+    }
+  }
+</style>
