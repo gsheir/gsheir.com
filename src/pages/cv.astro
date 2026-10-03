@@ -1,37 +1,27 @@
 ---
 import { getEntry, render } from "astro:content";
 
-import CopyMarkdown from "../components/CopyMarkdown.astro";
-import PageHero from "../components/PageHero.astro";
+import Article from "../components/Article.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const cv = await getEntry("pages", "cv");
 if (!cv) throw new Error("Missing src/content/pages/cv.md");
-const { Content } = await render(cv);
+const { Content, headings } = await render(cv);
 ---
 
-<BaseLayout title={cv.data.title} description={cv.data.description} markdownUrl="/cv.md">
-  <PageHero title={cv.data.title} />
-
-  <section class="pb-20 sm:pb-24">
-    <div class="mx-auto max-w-3xl px-4 sm:px-8">
-      <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <CopyMarkdown markdownUrl="/cv.md" />
-        <button
-          type="button"
-          onclick="window.print()"
-          class="no-print cursor-pointer text-sm font-medium text-ink-muted underline-offset-4 hover:text-primary hover:underline"
-        >
-          Print or save as PDF
-        </button>
-      </div>
-      <article class="cv prose max-w-none rounded-xl border border-line bg-card p-6 shadow-soft sm:prose-lg sm:p-10">
-        <h2 class="mt-0!">{cv.data.name}</h2>
-        {cv.data.summary && <p class="lead">{cv.data.summary}</p>}
-        <Content />
-      </article>
+<BaseLayout title={cv.data.title} description={cv.data.description}>
+  <Article title={cv.data.title} headings={headings} titleStyle="page" class="cv-page">
+    <p slot="header" class="no-print border-y border-rule py-3 text-sm">
+      <button type="button" onclick="window.print()" class="cursor-pointer font-medium hover:text-primary">
+        Print or save as PDF
+      </button>
+    </p>
+    <div class="cv prose max-w-none prose-lg">
+      <h2 class="mt-0!">{cv.data.name}</h2>
+      {cv.data.summary && <p class="lead">{cv.data.summary}</p>}
+      <Content />
     </div>
-  </section>
+  </Article>
 </BaseLayout>
 
 <style>
@@ -40,18 +30,85 @@ const { Content } = await render(cv);
     font-size: 0.9em;
   }
 
+  /* Fit the whole CV on one printed page */
+  @page {
+    size: A4;
+    margin: 10mm 13mm;
+  }
+
   @media print {
     :global(body) {
-      font-size: 11pt;
       background: white;
+      color: black;
     }
-    :global(main > section:first-child) {
+    :global(.cv-page) {
+      padding: 0;
+    }
+    :global(.cv-page header) {
       display: none;
     }
-    .cv {
-      border: 0;
-      box-shadow: none;
+    :global(.cv-page > div),
+    :global(.cv-page > div > div) {
+      max-width: none;
+      margin: 0;
       padding: 0;
+    }
+    .cv {
+      font-size: 8.2pt;
+      line-height: 1.27;
+      --tw-prose-body: #222;
+      --tw-prose-headings: #000;
+      --tw-prose-links: #000;
+      --tw-prose-bold: #000;
+    }
+    .cv :global(*) {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .cv :global(h2) {
+      font-size: 1.25em;
+      margin-top: 0.9em;
+      padding-top: 0.35em;
+      border-top: 1px solid #000;
+    }
+    .cv > :global(h2:first-child) {
+      font-size: 2em;
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .cv :global(.lead) {
+      font-size: 1.05em;
+      margin-top: 0.3em;
+    }
+    .cv :global(h3) {
+      font-size: 1.05em;
+      margin-top: 0.6em;
+    }
+    .cv :global(h3 + p) {
+      font-size: 0.95em;
+    }
+    .cv :global(ul) {
+      padding-left: 1.2em;
+      margin-top: 0.15em;
+    }
+    .cv :global(li) {
+      padding-left: 0.2em;
+      margin-top: 0.1em;
+    }
+    .cv :global(li > ul) {
+      margin-top: 0.05em;
+    }
+    .cv > :global(ul:last-child) {
+      columns: 2;
+      column-gap: 2em;
+    }
+    .cv > :global(ul:last-child li) {
+      break-inside: avoid;
+    }
+    .cv :global(a) {
+      text-decoration: none;
+      font-weight: inherit;
     }
   }
 </style>

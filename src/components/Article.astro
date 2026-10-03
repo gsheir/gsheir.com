@@ -1,0 +1,93 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  title: string;
+  headings?: MarkdownHeading[];
+  /** "page" matches the large titles on About me and Blog; "post" suits long blog post titles. */
+  titleStyle?: "post" | "page";
+  class?: string;
+}
+
+const { title, headings = [], titleStyle = "post", class: className } = Astro.props;
+const toc = headings.filter((heading) => heading.depth === 2);
+const hasSidebar = toc.length > 1 || Astro.slots.has("sidebar");
+---
+
+<article class:list={["pt-10 pb-24 sm:pt-16 sm:pb-32", className]}>
+  <div class="mx-auto max-w-3xl px-5 sm:px-8 xl:grid xl:max-w-6xl xl:grid-cols-[minmax(0,48rem)_14rem] xl:justify-between xl:gap-x-16">
+    <header class="xl:col-start-1">
+      <slot name="before-title" />
+      <h1
+        class:list={[
+          titleStyle === "page"
+            ? "display mb-14 -ml-[0.04em] text-[clamp(3.5rem,11vw,8.5rem)] sm:mb-20"
+            : "mb-8 text-4xl leading-[1.05] font-semibold tracking-[-0.045em] sm:text-6xl",
+        ]}
+      >
+        {title}
+      </h1>
+      <slot name="header" />
+    </header>
+
+    {hasSidebar && (
+      <aside class="no-print hidden xl:col-start-2 xl:row-span-2 xl:row-start-1 xl:block">
+        <div class="sticky top-8 space-y-10 pt-24">
+          <slot name="sidebar" />
+          {toc.length > 1 && (
+            <nav aria-label="On this page">
+              <p class="mb-3 text-sm font-medium">On this page</p>
+              <ul class="space-y-2 border-l border-line text-sm" data-toc>
+                {toc.map((heading) => (
+                  <li>
+                    <a
+                      href={`#${heading.slug}`}
+                      class="-ml-px block border-l-2 border-transparent pl-4 text-ink-muted hover:text-primary aria-[current=true]:border-primary aria-[current=true]:font-medium aria-[current=true]:text-ink"
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+        </div>
+      </aside>
+    )}
+
+    <div class="mt-12 xl:col-start-1 xl:row-start-2">
+      <slot name="before-content" />
+      <slot />
+      <slot name="after-content" />
+    </div>
+  </div>
+</article>
+
+<script>
+  // Highlights the contents entry for the section currently being read.
+  const toc = document.querySelector<HTMLElement>("[data-toc]");
+  if (toc) {
+    const links = [...toc.querySelectorAll<HTMLAnchorElement>("a")];
+    const sections = links
+      .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+      .filter((section): section is HTMLElement => section !== null);
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const line = window.innerHeight * 0.3;
+      let active = -1;
+      sections.forEach((section, index) => {
+        if (section.getBoundingClientRect().top <= line) active = index;
+      });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        active = sections.length - 1;
+      }
+      links.forEach((link, index) => link.setAttribute("aria-current", index === active ? "true" : "false"));
+    };
+
+    window.addEventListener("scroll", () => (frame ||= requestAnimationFrame(update)), { passive: true });
+    window.addEventListener("resize", () => (frame ||= requestAnimationFrame(update)));
+    update();
+  }
+</script>

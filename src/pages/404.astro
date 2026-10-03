@@ -1,17 +1,22 @@
 ---
-import Button from "../components/Button.astro";
 import PageHero from "../components/PageHero.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="Page not found">
   <PageHero title="404" subtitle="That page has gone out of play.">
-    <div class="mt-10 flex flex-wrap justify-center gap-4">
-      <Button href="/">Back home</Button>
-      <Button href="/blog/" variant="secondary">
-        Read the blog
-      </Button>
-    </div>
+    <ul class="mt-10 flex flex-wrap gap-x-8 gap-y-2 font-medium">
+      <li>
+        <a href="/" class="hover:text-primary">
+          Back home →
+        </a>
+      </li>
+      <li>
+        <a href="/blog/" class="hover:text-primary">
+          Read the blog →
+        </a>
+      </li>
+    </ul>
   </PageHero>
   <div class="pb-24"></div>
 </BaseLayout>

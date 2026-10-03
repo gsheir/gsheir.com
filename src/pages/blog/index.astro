@@ -17,18 +17,16 @@ const years = Map.groupBy(posts, (post) => post.data.pubDate.getFullYear());
     subtitle="Football and hockey analysis, coaching reflections, and notes on building software."
   />
 
-  <section class="pb-20 sm:pb-24">
-    <div class="mx-auto max-w-4xl space-y-16 px-4 sm:px-8">
-      {[...years].map(([year, yearPosts]) => (
-        <div>
-          <h2 class="mb-6 font-display text-sm font-semibold tracking-widest text-ink-subtle uppercase">{year}</h2>
-          <div class="grid gap-6">
-            {yearPosts.map((post) => (
-              <PostCard post={post} headingLevel="h3" />
-            ))}
-          </div>
+  <section class="mx-auto max-w-6xl space-y-16 px-5 pb-24 sm:px-8 sm:pb-32">
+    {[...years].map(([year, yearPosts]) => (
+      <div class="grid gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] sm:gap-8">
+        <h2 class="border-t border-rule pt-6 text-base font-medium sm:border-0">{year}</h2>
+        <div class="border-b border-rule">
+          {yearPosts.map((post) => (
+            <PostCard post={post} headingLevel="h3" />
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    ))}
   </section>
 </BaseLayout>

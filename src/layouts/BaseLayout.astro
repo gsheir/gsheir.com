@@ -1,6 +1,6 @@
 ---
-import "@fontsource-variable/inter";
-import "@fontsource-variable/outfit";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist-mono";
 import "../styles/global.css";
 
 import Footer from "../components/Footer.astro";
@@ -14,7 +14,6 @@ interface Props {
   type?: "website" | "article";
   publishedTime?: Date;
   modifiedTime?: Date;
-  markdownUrl?: string;
 }
 
 const {
@@ -24,12 +23,9 @@ const {
   type = "website",
   publishedTime,
   modifiedTime,
-  markdownUrl,
 } = Astro.props;
 
-const fullTitle = title
-  ? `${title} – ${site.name}`
-  : `${site.name} – data scientist, engineer, and sports performance analyst`;
+const fullTitle = title ? `${title} – ${site.name}` : site.name;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -39,7 +35,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
-      document.documentElement.classList.add("js");
       try {
         const saved = localStorage.getItem("theme");
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -53,10 +48,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="author" content={site.name} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.ico" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={`${site.name} – blog`} href="/rss.xml" />
-    {markdownUrl && <link rel="alternate" type="text/markdown" title="Markdown" href={markdownUrl} />}
-    <meta name="theme-color" content="#dc143c" />
+    <meta name="theme-color" content="#d4261c" />
 
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={site.name} />
@@ -76,7 +68,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <body class="flex min-h-dvh flex-col">
     <a
       href="#main"
-      class="sr-only z-[60] rounded-md bg-card px-4 py-2 focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+      class="sr-only z-[60] bg-ink px-4 py-2 text-surface focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
     >
       Skip to content
     </a>
@@ -85,20 +77,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       <slot />
     </main>
     <Footer />
-
-    <script>
-      const targets = document.querySelectorAll(".reveal");
-      const observer = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        },
-        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
-      );
-      targets.forEach((target) => observer.observe(target));
-    </script>
   </body>
 </html>

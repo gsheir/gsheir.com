@@ -31,7 +31,7 @@ The site will be available at `http://localhost:8080/`.
 
 ## Writing a blog post
 
-Add a Markdown file to `src/content/blog/`. The file name becomes the URL, e.g. `src/content/blog/my-post.md` is served at `/blog/my-post/`, with the raw Markdown at `/blog/my-post.md`.
+Add a Markdown file to `src/content/blog/`. The file name becomes the URL, e.g. `src/content/blog/my-post.md` is served at `/blog/my-post/`.
 
 ```markdown
 ---
@@ -60,12 +60,6 @@ _Caption, with an optional [link](https://example.com)_
 Set `draft: true` to hide a post from the built site while you work on it (drafts still show in `npm run dev`). Rename a file to `.mdx` to use components inside a post.
 
 The CV lives in `src/content/pages/cv.md`.
-
-## Agent-friendly extras
-
-- Every post (and the CV) has a raw Markdown version at the same URL with `.md`, plus a "Copy as Markdown" button.
-- [`/llms.txt`](https://gsheir.com/llms.txt) indexes the site; [`/llms-full.txt`](https://gsheir.com/llms-full.txt) has the full text of every post.
-- [`/rss.xml`](https://gsheir.com/rss.xml) and [`/sitemap-index.xml`](https://gsheir.com/sitemap-index.xml).
 
 ## Deployment
 
