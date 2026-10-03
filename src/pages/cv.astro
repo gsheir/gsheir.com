@@ -1,37 +1,27 @@
 ---
 import { getEntry, render } from "astro:content";
 
-import CopyMarkdown from "../components/CopyMarkdown.astro";
-import PageHero from "../components/PageHero.astro";
+import Article from "../components/Article.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const cv = await getEntry("pages", "cv");
 if (!cv) throw new Error("Missing src/content/pages/cv.md");
-const { Content } = await render(cv);
+const { Content, headings } = await render(cv);
 ---
 
 <BaseLayout title={cv.data.title} description={cv.data.description} markdownUrl="/cv.md">
-  <PageHero title={cv.data.title} />
-
-  <section class="pb-24 sm:pb-32">
-    <div class="mx-auto max-w-3xl px-5 sm:px-8">
-      <div class="mb-12 flex flex-wrap items-center justify-between gap-4 border-y border-rule py-4">
-        <CopyMarkdown markdownUrl="/cv.md" />
-        <button
-          type="button"
-          onclick="window.print()"
-          class="no-print cursor-pointer text-sm font-medium hover:text-primary"
-        >
-          Print or save as PDF
-        </button>
-      </div>
-      <article class="cv prose max-w-none sm:prose-lg">
-        <h2 class="mt-0!">{cv.data.name}</h2>
-        {cv.data.summary && <p class="lead">{cv.data.summary}</p>}
-        <Content />
-      </article>
+  <Article title={cv.data.title} headings={headings} class="cv-page">
+    <p slot="header" class="no-print border-y border-rule py-3 text-sm">
+      <button type="button" onclick="window.print()" class="cursor-pointer font-medium hover:text-primary">
+        Print or save as PDF
+      </button>
+    </p>
+    <div class="cv prose max-w-none prose-lg">
+      <h2 class="mt-0!">{cv.data.name}</h2>
+      {cv.data.summary && <p class="lead">{cv.data.summary}</p>}
+      <Content />
     </div>
-  </section>
+  </Article>
 </BaseLayout>
 
 <style>
@@ -45,8 +35,11 @@ const { Content } = await render(cv);
       font-size: 11pt;
       background: white;
     }
-    :global(main > section:first-child) {
+    :global(.cv-page header) {
       display: none;
+    }
+    :global(.cv-page) {
+      padding-top: 0;
     }
   }
 </style>
