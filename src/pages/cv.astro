@@ -16,7 +16,7 @@ const { Content } = await render(cv);
   <section class="pb-20 sm:pb-24">
     <div class="mx-auto max-w-3xl px-4 sm:px-8">
       <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <CopyMarkdown markdownUrl="/cv.md" pageUrl={Astro.url.href} />
+        <CopyMarkdown markdownUrl="/cv.md" />
         <button
           type="button"
           onclick="window.print()"

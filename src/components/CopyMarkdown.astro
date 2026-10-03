@@ -1,11 +1,9 @@
 ---
 interface Props {
   markdownUrl: string;
-  pageUrl: string;
 }
 
-const { markdownUrl, pageUrl } = Astro.props;
-const prompt = `Read ${new URL(markdownUrl, pageUrl)} so I can ask questions about it.`;
+const { markdownUrl } = Astro.props;
 const buttonClass =
   "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1.5 text-sm font-medium text-ink-muted transition hover:border-primary hover:text-primary";
 ---
@@ -27,25 +25,6 @@ const buttonClass =
     </svg>
     <span data-copy-label>Copy as Markdown</span>
   </button>
-  <a class={buttonClass} href={markdownUrl}>
-    View as Markdown
-  </a>
-  <a
-    class={buttonClass}
-    href={`https://claude.ai/new?q=${encodeURIComponent(prompt)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Open in Claude
-  </a>
-  <a
-    class={buttonClass}
-    href={`https://chatgpt.com/?q=${encodeURIComponent(prompt)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Open in ChatGPT
-  </a>
 </div>
 
 <script>

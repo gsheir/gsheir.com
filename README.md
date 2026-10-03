@@ -63,7 +63,7 @@ The CV lives in `src/content/pages/cv.md`.
 
 ## Agent-friendly extras
 
-- Every post (and the CV) has a raw Markdown version at the same URL with `.md`, plus "Copy as Markdown" and "Open in Claude/ChatGPT" buttons.
+- Every post (and the CV) has a raw Markdown version at the same URL with `.md`, plus a "Copy as Markdown" button.
 - [`/llms.txt`](https://gsheir.com/llms.txt) indexes the site; [`/llms-full.txt`](https://gsheir.com/llms-full.txt) has the full text of every post.
 - [`/rss.xml`](https://gsheir.com/rss.xml) and [`/sitemap-index.xml`](https://gsheir.com/sitemap-index.xml).
 

@@ -22,7 +22,7 @@ interface Props {
 }
 
 const { post, newer, older, all } = Astro.props;
-const { title, description, pubDate, updatedDate, category, tags, series, image } = post.data;
+const { title, description, pubDate, updatedDate, category, series, image } = post.data;
 const { Content, headings } = await render(post);
 const toc = headings.filter((heading) => heading.depth === 2);
 const seriesPosts = series
@@ -83,7 +83,7 @@ const jsonLd = {
             </>
           )}
         </p>
-        <CopyMarkdown markdownUrl={markdownUrl} pageUrl={Astro.url.href} />
+        <CopyMarkdown markdownUrl={markdownUrl} />
       </header>
 
       {toc.length > 1 && (
@@ -131,14 +131,6 @@ const jsonLd = {
         <div class="prose max-w-none prose-lg">
           <Content />
         </div>
-
-        {tags.length > 0 && (
-          <ul class="mt-12 flex flex-wrap gap-2 text-sm" aria-label="Tags">
-            {tags.map((tag) => (
-              <li class="rounded-full bg-surface-alt px-3 py-1 text-ink-muted">#{tag}</li>
-            ))}
-          </ul>
-        )}
 
         <nav aria-label="More posts" class="no-print mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-2">
           {older ? (
