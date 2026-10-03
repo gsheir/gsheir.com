@@ -1,0 +1,35 @@
+---
+import { postUrl, type Post } from "../lib/posts";
+
+interface Props {
+  name: string;
+  posts: Post[];
+  currentId: string;
+  /** Smaller type for the sidebar beside a post. */
+  compact?: boolean;
+}
+
+const { name, posts, currentId, compact = false } = Astro.props;
+---
+
+<div class:list={[compact ? "text-sm" : "border-y border-rule py-5"]}>
+  <p class:list={["mb-3", compact ? "font-medium" : "text-sm text-ink-subtle"]}>Part of a series: {name}</p>
+  <ol class:list={[compact ? "space-y-2 border-l border-line" : "space-y-2"]}>
+    {posts.map((part) => (
+      <li>
+        {part.id === currentId ? (
+          <span aria-current="page" class="-ml-px block border-l-2 border-primary pl-4 font-semibold text-ink">
+            {part.data.title}
+          </span>
+        ) : (
+          <a
+            href={postUrl(part)}
+            class="-ml-px block border-l-2 border-transparent pl-4 text-ink-muted hover:text-primary"
+          >
+            {part.data.title}
+          </a>
+        )}
+      </li>
+    ))}
+  </ol>
+</div>

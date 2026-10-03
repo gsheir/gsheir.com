@@ -27,9 +27,7 @@ const {
   markdownUrl,
 } = Astro.props;
 
-const fullTitle = title
-  ? `${title} – ${site.name}`
-  : `${site.name} – data scientist, engineer, and sports performance analyst`;
+const fullTitle = title ? `${title} – ${site.name}` : site.name;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 

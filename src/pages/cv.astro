@@ -10,7 +10,7 @@ const { Content, headings } = await render(cv);
 ---
 
 <BaseLayout title={cv.data.title} description={cv.data.description} markdownUrl="/cv.md">
-  <Article title={cv.data.title} headings={headings} class="cv-page">
+  <Article title={cv.data.title} headings={headings} titleStyle="page" class="cv-page">
     <p slot="header" class="no-print border-y border-rule py-3 text-sm">
       <button type="button" onclick="window.print()" class="cursor-pointer font-medium hover:text-primary">
         Print or save as PDF
@@ -30,16 +30,85 @@ const { Content, headings } = await render(cv);
     font-size: 0.9em;
   }
 
+  /* Fit the whole CV on one printed page */
+  @page {
+    size: A4;
+    margin: 10mm 13mm;
+  }
+
   @media print {
     :global(body) {
-      font-size: 11pt;
       background: white;
+      color: black;
+    }
+    :global(.cv-page) {
+      padding: 0;
     }
     :global(.cv-page header) {
       display: none;
     }
-    :global(.cv-page) {
+    :global(.cv-page > div),
+    :global(.cv-page > div > div) {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+    }
+    .cv {
+      font-size: 8.2pt;
+      line-height: 1.27;
+      --tw-prose-body: #222;
+      --tw-prose-headings: #000;
+      --tw-prose-links: #000;
+      --tw-prose-bold: #000;
+    }
+    .cv :global(*) {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .cv :global(h2) {
+      font-size: 1.25em;
+      margin-top: 0.9em;
+      padding-top: 0.35em;
+      border-top: 1px solid #000;
+    }
+    .cv > :global(h2:first-child) {
+      font-size: 2em;
+      border-top: 0;
       padding-top: 0;
+      margin-top: 0;
+    }
+    .cv :global(.lead) {
+      font-size: 1.05em;
+      margin-top: 0.3em;
+    }
+    .cv :global(h3) {
+      font-size: 1.05em;
+      margin-top: 0.6em;
+    }
+    .cv :global(h3 + p) {
+      font-size: 0.95em;
+    }
+    .cv :global(ul) {
+      padding-left: 1.2em;
+      margin-top: 0.15em;
+    }
+    .cv :global(li) {
+      padding-left: 0.2em;
+      margin-top: 0.1em;
+    }
+    .cv :global(li > ul) {
+      margin-top: 0.05em;
+    }
+    .cv > :global(ul:last-child) {
+      columns: 2;
+      column-gap: 2em;
+    }
+    .cv > :global(ul:last-child li) {
+      break-inside: avoid;
+    }
+    .cv :global(a) {
+      text-decoration: none;
+      font-weight: inherit;
     }
   }
 </style>

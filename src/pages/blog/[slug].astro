@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 
 import Article from "../../components/Article.astro";
+import SeriesList from "../../components/SeriesList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { formatDate, getPosts, postMarkdownUrl, postUrl, readingTime, type Post } from "../../lib/posts";
 
@@ -70,27 +71,12 @@ const jsonLd = {
     </p>
 
     {seriesPosts.length > 1 && (
-      <aside slot="before-content" class="mb-12 border-y border-rule py-5">
-        <p class="mb-3 text-sm text-ink-subtle">Part of a series: {series!.name}</p>
-        <ol class="space-y-2">
-          {seriesPosts.map((part) => (
-            <li>
-              {part.id === post.id ? (
-                <span aria-current="page" class="block border-l-2 border-primary pl-4 font-semibold text-ink">
-                  {part.data.title}
-                </span>
-              ) : (
-                <a
-                  href={postUrl(part)}
-                  class="block border-l-2 border-transparent pl-4 text-ink-muted hover:text-primary"
-                >
-                  {part.data.title}
-                </a>
-              )}
-            </li>
-          ))}
-        </ol>
-      </aside>
+      <SeriesList slot="sidebar" name={series!.name} posts={seriesPosts} currentId={post.id} compact />
+    )}
+    {seriesPosts.length > 1 && (
+      <div slot="before-content" class="mb-12 xl:hidden">
+        <SeriesList name={series!.name} posts={seriesPosts} currentId={post.id} />
+      </div>
     )}
 
     <div class="prose max-w-none prose-lg">
