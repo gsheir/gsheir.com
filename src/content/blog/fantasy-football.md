@@ -1,0 +1,63 @@
+---
+title: "I built a fantasy football game (and portfolio site) with AI, and it was actually good"
+description: "How I ended up building gsheir.com using AI-assisted coding."
+pubDate: 2025-07-09
+category: Software
+tags: [AI, Software engineering]
+---
+
+*(For the purposes of discussion, I’ll use "AI" to refer to LLM-enabled tools where the training and building of the model has been outsourced, otherwise we get into a deep, deep rabbit hole)*
+
+## How I ended up building [gsheir.com](http://gsheir.com) using AI-assisted coding
+
+I’m not the most evangelical of AI users – I use GitHub Copilot (mainly as a very good autocompletion tool), but haven't felt the need to use AI much beyond that. I've always felt that a product should be built on technology and not be defined by it, so having not really been hooked by the value proposition of AI coding tools, I do recoil a bit when I hear about how [AI will make software engineering obsolete](https://www.latent.space/p/ai-engineer) (ew), and have watched the progress in AI with a bit of muted scepticism.
+
+So when I met a couple of friends for drinks last week and we floated the idea of building our own version of fantasy football for the Women’s Euros 2025, I broke rank with myself by suggesting I would try and vibe code something up. The time constraint (the tournament was starting in 3 days) and my limited web development experience meant that this was the perfect use case for some sort of agentic AI, vibe coding approach, right?
+
+This is what I learnt, and maybe what has changed about how I think about AI-assisted coding.
+
+## It’s kind of equivalent to getting up to speed with an existing codebase
+
+If you stripped away the fact that the whole thing is written by a machine, it’s actually the same sort of process as any other technical onboarding. I was a bit overwhelmed at first, especially as I watched Copilot spit out code like there’s no tomorrow, but then I started interacting with the code and seeing how it did and didn't work, then I read and understood the changes as they were made, and slowly I gained enough familiarity to try things myself and build on top of it.
+
+It’s pretty tempting to get Copilot to fix any problems that come up. I went through several cycles of seeing something that wasn't working (e.g. not being able to run in Docker), finding out just enough information to know where the problem was, and then asking Copilot to fix it. It’s okay as a crutch while getting up to speed, but I think it’s a bit like always letting someone else drive during pair programming – at some point you’ll need to actually write something to get it exactly how you want it.
+
+## It won't know what it can't see (but it saw more than I thought)
+
+This seems obvious, but the context window is hugely important, and the code that Copilot suggests won't be that accurate if there are external dependencies, like
+
+- External API calls
+- External tools and environments (e.g. it didn't really give decent answers to "why is my Railway deployment configuration not working")
+
+I was pretty surprised to see it have much more control over things that I would traditionally think are outside its control, particularly around using the command line to check if a change is working, e.g. using `psql` to check database tables or checking the logs of Docker containers.
+
+It’s the sort of thing I would do as a dev if I wanted to check if something was working, and I can imagine Copilot eventually doing other things that an engineer would typically do, like doing exploratory data analysis using a Jupyter Notebook or reading API docs.
+
+## Finding the delegation boundary is key, and it’s different for everyone
+
+I think there’s a level of comfort that each person will have with how much they *let AI rip*. As a software engineer, where my primary output is the software I build, I do feel like retaining a degree of control, and really checking what’s being written by Copilot.
+
+There are loads of (slightly schadenfreude-inducing) stories about cost spikes and security vulnerabilities introduced by a failure to review AI-suggested code properly. I've found that when Copilot was given free rein, there was particularly risky territory that I was at risk of entering, especially around
+
+- Ensuring AI-written tests to make sure the intent is clear and the feature actually functions, even if the tests are passing
+- Not committing things one shouldn't
+
+The volume of code is also one to keep an eye on here, and I found that as Copilot tried different solutions, it left behind traces of its past work (e.g. redundant deployment scripts), so there’s a fair bit of cleaning up to do to make sure that the intent of the code is clear for the sake of maintainability.
+
+## Conclusion – it’s actually not bad and I think I’ll use it more, if there is value to doing so
+
+Honestly, I don't think I would have been able to build this app in the time that I did without AI, and I’m all for it for this use case. If you have a fun idea in mind but feel like you don't necessarily have enough deep technical knowledge, it’s a good way to get started and gives you a lot of material to start learning from.
+
+I think I’m still some way away from using AI to this extent at work though, where the stakes are higher and I can do a lot of it unassisted, hence why I don't see a massive paradigm shift anytime soon. I do think that it has improved loads since I've first used it and it will get better in the future.
+
+In the meantime, check out [gsheir.com](http://gsheir.com) to judge how good the end product is for yourself 😉
+
+---
+
+## Side notes and tidbits
+
+- I've not done many coding side projects in my own time before, so this was a cool experience in itself. I think the thing was that we as a friend group had already committed to playing the fantasy football game for the Euros, which forced me to actually build something for a deadline. Yes, it’s not perfect, and the API integration with the football data doesn't work as well as I'd like, and there are many things I still want to improve about the gameplay (maybe in time for the WSL season in September). But it’s live, it’s running, I’m losing (sad), and I've got a product and some users. I might only have two users, but they're **my** users.
+- I’m kind of amazed at how easy it is to deploy and host something nowadays – I went for [Railway](https://railway.com), but the options are endless. For the cost of a pint every month, I don't really have to worry about infrastructure (for the small scale of my app), and the CI experience is pretty seamless. Would recommend.
+
+> [!NOTE]
+> **A note from the future:** The game has now been moved to [https://weuro2025.gsheir.com](https://weuro2025.gsheir.com). It is no longer maintained (because the Euros are over, and we won!) but you can click around and explore.

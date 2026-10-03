@@ -1,0 +1,107 @@
+---
+import Button from "../components/Button.astro";
+import ContactLinks from "../components/ContactLinks.astro";
+import PostCard from "../components/PostCard.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getPosts } from "../lib/posts";
+
+const posts = await getPosts();
+const featured = posts.filter((post) => post.data.featured).slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="relative flex min-h-[80vh] items-center overflow-hidden pt-32 pb-24 sm:pt-40">
+    <div class="bg-hero-glow absolute inset-0" aria-hidden="true"></div>
+    <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-8 lg:grid-cols-2 lg:gap-16">
+      <div class="animate-fade-up text-center lg:text-left">
+        <h1 class="text-gradient-heading mb-6 pb-2 text-5xl font-extrabold tracking-tight sm:text-7xl">
+          Hi, I’m Geoff.
+        </h1>
+        <p class="mb-8 text-xl leading-relaxed text-ink sm:text-2xl">
+          I’m a full stack data scientist, engineer, and sports performance analyst.
+        </p>
+        <div class="flex flex-wrap justify-center gap-4 lg:justify-start">
+          <Button href="/about/">About me</Button>
+          <Button href="#contact" variant="secondary">
+            Get in touch
+          </Button>
+        </div>
+      </div>
+      <div class="animate-fade-up flex justify-center [animation-delay:200ms]">
+        <div class="relative size-72 sm:size-96">
+          <div
+            class="absolute -inset-5 -z-10 rounded-xl bg-[image:var(--gradient-hero)] opacity-40 blur-3xl"
+            aria-hidden="true"
+          ></div>
+          <img
+            src="https://images.gsheir.com/about_me/prem_trophy.jpg"
+            alt="Geoff Sheir with the Women’s Super League trophy"
+            class="size-full rounded-xl object-cover shadow-floating"
+            width="384"
+            height="384"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-8">
+      <h2 class="reveal mb-10 text-center text-4xl font-bold sm:text-5xl">Projects</h2>
+      <article class="reveal mx-auto flex max-w-3xl flex-col gap-6 rounded-xl border border-line bg-card p-8 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-lifted sm:flex-row sm:items-center sm:p-10">
+        <div class="grid size-16 shrink-0 place-items-center rounded-lg bg-[image:var(--gradient-hero)] text-white shadow-card">
+          <svg
+            class="size-8"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <h3 class="mb-2 text-2xl font-semibold">XML Translator</h3>
+          <p class="mb-4 text-ink-muted">A tool to translate hockey XML event data.</p>
+          <ul class="flex flex-wrap gap-2 text-sm">
+            {["Python", "Data engineering", "Event data"].map((tag) => (
+              <li class="rounded-full bg-surface-alt px-3 py-1 text-ink-muted">{tag}</li>
+            ))}
+          </ul>
+        </div>
+        <Button href="https://xml.gsheir.com" variant="accent">
+          Explore tool →
+        </Button>
+      </article>
+    </div>
+  </section>
+
+  <section class="bg-surface-alt py-20 sm:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-8">
+      <div class="reveal mb-12 text-center">
+        <h2 class="mb-3 text-4xl font-bold sm:text-5xl">Featured analysis</h2>
+        <p class="text-lg text-ink-muted">Deep dives and blog posts</p>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {featured.map((post) => (
+          <PostCard post={post} showDate={false} />
+        ))}
+      </div>
+      <div class="reveal mt-12 text-center">
+        <Button href="/blog/">View all posts →</Button>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="py-20 sm:py-24">
+    <div class="reveal mx-auto max-w-6xl px-4 text-center sm:px-8">
+      <h2 class="mb-8 text-4xl font-bold sm:text-5xl">Let’s chat</h2>
+      <ContactLinks />
+    </div>
+  </section>
+</BaseLayout>

@@ -1,21 +1,18 @@
-FROM python:3.13-slim
+FROM node:22-alpine AS build
 
 WORKDIR /app
+ENV ASTRO_TELEMETRY_DISABLED=1
 
-# Install uv
-RUN pip install uv
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev
-
-# Copy application
 COPY . .
+RUN npm run build
 
-# Collect static files 
-RUN uv run python manage.py collectstatic --noinput
+FROM caddy:2-alpine
 
-EXPOSE 8000
+COPY Caddyfile /etc/caddy/Caddyfile
+COPY --from=build /app/redirects.caddy /etc/caddy/redirects.caddy
+COPY --from=build /app/dist /srv
 
-# Run migrations and start gunicorn
-ENTRYPOINT ["sh", "-c", "uv run gunicorn --bind [::]:${PORT:-8080} --workers 2 --threads 2 --timeout 120 project.wsgi:application" ] 
+EXPOSE 8080

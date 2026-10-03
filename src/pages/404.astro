@@ -1,0 +1,17 @@
+---
+import Button from "../components/Button.astro";
+import PageHero from "../components/PageHero.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Page not found">
+  <PageHero title="404" subtitle="That page has gone out of play.">
+    <div class="mt-10 flex flex-wrap justify-center gap-4">
+      <Button href="/">Back home</Button>
+      <Button href="/blog/" variant="secondary">
+        Read the blog
+      </Button>
+    </div>
+  </PageHero>
+  <div class="pb-24"></div>
+</BaseLayout>

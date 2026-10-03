@@ -1,0 +1,157 @@
+---
+import { render } from "astro:content";
+
+import Badge from "../../components/Badge.astro";
+import CopyMarkdown from "../../components/CopyMarkdown.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatDate, getPosts, postMarkdownUrl, postUrl, readingTime, type Post } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, index) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[index - 1], older: posts[index + 1], all: posts },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+  all: Post[];
+}
+
+const { post, newer, older, all } = Astro.props;
+const { title, description, pubDate, updatedDate, category, series, image } = post.data;
+const { Content, headings } = await render(post);
+const toc = headings.filter((heading) => heading.depth === 2);
+const seriesPosts = series
+  ? all
+      .filter((other) => other.data.series?.name === series.name)
+      .sort((a, b) => a.data.series!.part - b.data.series!.part)
+  : [];
+const markdownUrl = postMarkdownUrl(post);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description,
+  datePublished: pubDate.toISOString(),
+  dateModified: (updatedDate ?? pubDate).toISOString(),
+  author: { "@type": "Person", name: "Geoffrey Sheir", url: Astro.site?.href },
+  url: new URL(postUrl(post), Astro.site).href,
+  ...(image && { image }),
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  type="article"
+  publishedTime={pubDate}
+  modifiedTime={updatedDate}
+  markdownUrl={markdownUrl}
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <article class="relative pt-28 pb-20 sm:pt-36">
+    <div class="bg-hero-glow absolute inset-x-0 top-0 h-96" aria-hidden="true"></div>
+
+    <div class="relative mx-auto max-w-3xl px-4 sm:px-8 xl:grid xl:max-w-6xl xl:grid-cols-[minmax(0,48rem)_14rem] xl:justify-between xl:gap-x-16">
+      <header class="animate-fade-up xl:col-start-1">
+        <a href="/blog/" class="no-print mb-6 inline-block text-sm font-medium text-ink-subtle hover:text-primary">
+          ← All posts
+        </a>
+        <div class="mb-4 flex flex-wrap gap-2">
+          <Badge>{category}</Badge>
+          {series && (
+            <Badge tone="secondary">
+              {series.name} · Part {series.part}
+            </Badge>
+          )}
+        </div>
+        <h1 class="mb-5 text-4xl leading-tight font-extrabold tracking-tight text-ink sm:text-5xl">{title}</h1>
+        <p class="mb-6 flex flex-wrap gap-x-3 text-ink-subtle">
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+          <span aria-hidden="true">·</span>
+          <span>{readingTime(post.body)} min read</span>
+          {updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>Updated {formatDate(updatedDate)}</span>
+            </>
+          )}
+        </p>
+        <CopyMarkdown markdownUrl={markdownUrl} />
+      </header>
+
+      {toc.length > 1 && (
+        <nav aria-label="On this page" class="no-print hidden xl:col-start-2 xl:row-span-2 xl:row-start-1 xl:block">
+          <div class="sticky top-28">
+            <p class="mb-3 font-display text-sm font-semibold tracking-widest text-ink-subtle uppercase">
+              On this page
+            </p>
+            <ul class="space-y-2 border-l border-line text-sm">
+              {toc.map((heading) => (
+                <li>
+                  <a
+                    href={`#${heading.slug}`}
+                    class="-ml-px block border-l-2 border-transparent pl-4 text-ink-muted transition hover:border-primary hover:text-primary"
+                  >
+                    {heading.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </nav>
+      )}
+
+      <div class="mt-10 xl:col-start-1 xl:row-start-2">
+        {seriesPosts.length > 1 && (
+          <aside class="mb-10 rounded-lg border border-line bg-surface-alt p-5">
+            <p class="mb-2 font-display font-semibold text-ink">This post is part of a series: {series!.name}</p>
+            <ol class="space-y-1">
+              {seriesPosts.map((part) => (
+                <li>
+                  {part.id === post.id ? (
+                    <span class="font-medium text-ink">{part.data.title}</span>
+                  ) : (
+                    <a href={postUrl(part)} class="text-primary underline-offset-4 hover:underline">
+                      {part.data.title}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </aside>
+        )}
+
+        <div class="prose max-w-none prose-lg">
+          <Content />
+        </div>
+
+        <nav aria-label="More posts" class="no-print mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-2">
+          {older ? (
+            <a href={postUrl(older)} class="group rounded-lg border border-line p-5 transition hover:border-primary">
+              <span class="block text-sm text-ink-subtle">← Previous</span>
+              <span class="font-display font-semibold text-ink group-hover:text-primary">{older.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {newer && (
+            <a
+              href={postUrl(newer)}
+              class="group rounded-lg border border-line p-5 text-right transition hover:border-primary"
+            >
+              <span class="block text-sm text-ink-subtle">Next →</span>
+              <span class="font-display font-semibold text-ink group-hover:text-primary">{newer.data.title}</span>
+            </a>
+          )}
+        </nav>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
