@@ -13,19 +13,19 @@ const { Content } = await render(cv);
 <BaseLayout title={cv.data.title} description={cv.data.description} markdownUrl="/cv.md">
   <PageHero title={cv.data.title} />
 
-  <section class="pb-20 sm:pb-24">
-    <div class="mx-auto max-w-3xl px-4 sm:px-8">
-      <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+  <section class="pb-24 sm:pb-32">
+    <div class="mx-auto max-w-3xl px-5 sm:px-8">
+      <div class="mb-12 flex flex-wrap items-center justify-between gap-4 border-y border-rule py-4">
         <CopyMarkdown markdownUrl="/cv.md" />
         <button
           type="button"
           onclick="window.print()"
-          class="no-print cursor-pointer text-sm font-medium text-ink-muted underline-offset-4 hover:text-primary hover:underline"
+          class="no-print cursor-pointer text-sm font-medium hover:text-primary"
         >
           Print or save as PDF
         </button>
       </div>
-      <article class="cv prose max-w-none rounded-xl border border-line bg-card p-6 shadow-soft sm:prose-lg sm:p-10">
+      <article class="cv prose max-w-none sm:prose-lg">
         <h2 class="mt-0!">{cv.data.name}</h2>
         {cv.data.summary && <p class="lead">{cv.data.summary}</p>}
         <Content />
@@ -47,11 +47,6 @@ const { Content } = await render(cv);
     }
     :global(main > section:first-child) {
       display: none;
-    }
-    .cv {
-      border: 0;
-      box-shadow: none;
-      padding: 0;
     }
   }
 </style>

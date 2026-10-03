@@ -25,11 +25,14 @@ export function readingTime(body = "") {
   return Math.max(1, Math.round(words / wordsPerMinute));
 }
 
-export const formatDate = (date: Date, style: "long" | "month" = "long") =>
-  date.toLocaleDateString(
-    "en-GB",
-    style === "long" ? { day: "numeric", month: "long", year: "numeric" } : { month: "long", year: "numeric" },
-  );
+const dateFormats = {
+  long: { day: "numeric", month: "long", year: "numeric" },
+  short: { day: "2-digit", month: "short", year: "numeric" },
+  month: { month: "long", year: "numeric" },
+} satisfies Record<string, Intl.DateTimeFormatOptions>;
+
+export const formatDate = (date: Date, style: keyof typeof dateFormats = "long") =>
+  date.toLocaleDateString("en-GB", dateFormats[style]);
 
 export const isoDate = (date: Date) => date.toISOString().slice(0, 10);
 

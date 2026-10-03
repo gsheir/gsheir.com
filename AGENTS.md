@@ -47,6 +47,8 @@ Posts are plain Markdown by default. Only use MDX (`.mdx`) when a post needs a c
 
 # Styling
 
-- Use Tailwind utilities with the theme tokens in `src/styles/global.css` rather than hard-coded colours: `bg-surface`, `bg-surface-alt`, `bg-card`, `text-ink`, `text-ink-muted`, `text-ink-subtle`, `text-primary`, `border-line`, and the brand scales `crimson`, `lilac`, and `sky`.
-- Dark mode is driven by `data-theme="dark"` on `<html>`. The theme-aware tokens switch automatically; use the `dark:` variant only when needed.
-- Add `reveal` to an element to fade it in on scroll.
+The site uses a flat, Swiss-inspired style: large tightly tracked type, solid colour panels, rules to divide content, and no gradients, shadows or rounded containers. Buttons may be pill-shaped; everything else is square. Hover states change colour instantly, without transitions.
+
+- Use Tailwind utilities with the theme tokens in `src/styles/global.css` rather than hard-coded colours: `bg-surface`, `bg-surface-alt`, `bg-panel`, `text-on-panel`, `text-ink`, `text-ink-muted`, `text-ink-subtle`, `text-primary` (vermilion), `text-accent` (Klein blue), `border-rule` (strong dividers) and `border-line` (subtle borders), plus the brand scales `vermilion` and `klein`.
+- Geist is the only typeface, with Geist Mono for dates. Use the `display` utility for names and page titles.
+- Dark mode is driven by `data-theme="dark"` on `<html>`: a black background with off-white text. The theme-aware tokens switch automatically; use the `dark:` variant only when needed.

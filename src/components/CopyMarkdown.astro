@@ -5,7 +5,7 @@ interface Props {
 
 const { markdownUrl } = Astro.props;
 const buttonClass =
-  "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1.5 text-sm font-medium text-ink-muted transition hover:border-primary hover:text-primary";
+  "inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-rule px-3.5 py-1.5 text-sm font-medium hover:border-primary hover:bg-primary hover:text-surface";
 ---
 
 <div class="no-print flex flex-wrap items-center gap-2" data-copy-markdown={markdownUrl}>
