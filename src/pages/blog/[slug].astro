@@ -4,7 +4,7 @@ import { render } from "astro:content";
 import Article from "../../components/Article.astro";
 import SeriesList from "../../components/SeriesList.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { formatDate, getPosts, postMarkdownUrl, postUrl, readingTime, type Post } from "../../lib/posts";
+import { formatDate, getPosts, postUrl, readingTime, type Post } from "../../lib/posts";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -29,7 +29,6 @@ const seriesPosts = series
       .filter((other) => other.data.series?.name === series.name)
       .sort((a, b) => a.data.series!.part - b.data.series!.part)
   : [];
-const markdownUrl = postMarkdownUrl(post);
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -51,7 +50,6 @@ const jsonLd = {
   type="article"
   publishedTime={pubDate}
   modifiedTime={updatedDate}
-  markdownUrl={markdownUrl}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <Article title={title} headings={headings}>

@@ -14,7 +14,6 @@ interface Props {
   type?: "website" | "article";
   publishedTime?: Date;
   modifiedTime?: Date;
-  markdownUrl?: string;
 }
 
 const {
@@ -24,7 +23,6 @@ const {
   type = "website",
   publishedTime,
   modifiedTime,
-  markdownUrl,
 } = Astro.props;
 
 const fullTitle = title ? `${title} – ${site.name}` : site.name;
@@ -50,9 +48,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="author" content={site.name} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.ico" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={`${site.name} – blog`} href="/rss.xml" />
-    {markdownUrl && <link rel="alternate" type="text/markdown" title="Markdown" href={markdownUrl} />}
     <meta name="theme-color" content="#d4261c" />
 
     <meta property="og:type" content={type} />

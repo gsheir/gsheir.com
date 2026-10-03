@@ -15,8 +15,6 @@ export async function getPosts(): Promise<Post[]> {
 
 export const postUrl = (post: Post) => `/blog/${post.id}/`;
 
-export const postMarkdownUrl = (post: Post) => `/blog/${post.id}.md`;
-
 export function readingTime(body = "") {
   const words = body
     .replace(/[#*_>`\[\]()!-]/g, " ")
@@ -33,29 +31,3 @@ const dateFormats = {
 
 export const formatDate = (date: Date, style: keyof typeof dateFormats = "long") =>
   date.toLocaleDateString("en-GB", dateFormats[style]);
-
-export const isoDate = (date: Date) => date.toISOString().slice(0, 10);
-
-/** Raw Markdown for a post, with a header so the file stands on its own. */
-export function postToMarkdown(post: Post, siteUrl: string) {
-  const { title, description, pubDate, updatedDate, series } = post.data;
-  const lines = [
-    `# ${title}`,
-    "",
-    `> ${description}`,
-    "",
-    `- Author: Geoffrey Sheir`,
-    `- Published: ${isoDate(pubDate)}`,
-    ...(updatedDate ? [`- Updated: ${isoDate(updatedDate)}`] : []),
-    ...(series ? [`- Series: ${series.name} (part ${series.part})`] : []),
-    `- Source: ${new URL(postUrl(post), siteUrl)}`,
-    "",
-    absoluteLinks(post.body ?? "", siteUrl).trim(),
-    "",
-  ];
-  return lines.join("\n");
-}
-
-/** Makes root-relative Markdown links absolute, so copied Markdown still works elsewhere. */
-export const absoluteLinks = (markdown: string, siteUrl: string) =>
-  markdown.replace(/\]\((\/[^)\s]*)\)/g, (_, path: string) => `](${new URL(path, siteUrl)})`);

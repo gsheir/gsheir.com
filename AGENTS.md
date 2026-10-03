@@ -27,7 +27,7 @@ This is a static site built with [Astro](https://docs.astro.build), TypeScript (
 - `src/content/blog/` – blog posts as Markdown (`.md`) or MDX (`.mdx`). The file name is the URL slug.
 - `src/content/pages/cv.md` – the CV.
 - `src/content.config.ts` – frontmatter schemas. The build fails if a post's frontmatter does not match.
-- `src/pages/` – routes. `[slug].md.ts`, `cv.md.ts`, `llms.txt.ts`, and `llms-full.txt.ts` serve raw Markdown for agents.
+- `src/pages/` – routes.
 - `src/components/` and `src/layouts/` – shared UI.
 - `src/styles/global.css` – Tailwind theme: palette, fonts, and theme-aware tokens, plus blog typography.
 - `src/plugins/rehype-figures.ts` – turns image paragraphs into figures with captions.

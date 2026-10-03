@@ -1,6 +1,5 @@
 import { unified } from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
-import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -14,7 +13,7 @@ import rehypeFigures from "./src/plugins/rehype-figures";
 export default defineConfig({
   site: "https://gsheir.com",
   trailingSlash: "ignore",
-  integrations: [mdx(), sitemap(), siteChecks()],
+  integrations: [mdx(), siteChecks()],
   markdown: {
     processor: unified({
       remarkPlugins: [remarkAlert],

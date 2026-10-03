@@ -9,7 +9,7 @@ if (!cv) throw new Error("Missing src/content/pages/cv.md");
 const { Content, headings } = await render(cv);
 ---
 
-<BaseLayout title={cv.data.title} description={cv.data.description} markdownUrl="/cv.md">
+<BaseLayout title={cv.data.title} description={cv.data.description}>
   <Article title={cv.data.title} headings={headings} titleStyle="page" class="cv-page">
     <p slot="header" class="no-print border-y border-rule py-3 text-sm">
       <button type="button" onclick="window.print()" class="cursor-pointer font-medium hover:text-primary">
