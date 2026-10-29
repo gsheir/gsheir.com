@@ -22,7 +22,7 @@ const hasSidebar = toc.length > 1 || Astro.slots.has("sidebar");
         class:list={[
           titleStyle === "page"
             ? "display mb-14 -ml-[0.04em] text-[clamp(3.5rem,11vw,8.5rem)] sm:mb-20"
-            : "mb-8 text-4xl leading-[1.05] font-semibold tracking-[-0.045em] sm:text-6xl",
+            : "mb-8 text-4xl leading-[1.05] font-semibold tracking-display sm:text-6xl",
         ]}
       >
         {title}

@@ -1,7 +1,8 @@
 ---
-import "@fontsource-variable/geist";
-import "@fontsource-variable/geist-mono";
+import "@fontsource/fragment-mono";
 import "../styles/global.css";
+
+import switzer from "../assets/fonts/Switzer-Variable.woff2?url";
 
 import Footer from "../components/Footer.astro";
 import Navbar from "../components/Navbar.astro";
@@ -43,6 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         document.documentElement.dataset.theme = "light";
       }
     </script>
+    <link rel="preload" href={switzer} as="font" type="font/woff2" crossorigin />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="author" content={site.name} />
