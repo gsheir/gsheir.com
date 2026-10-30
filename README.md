@@ -13,6 +13,8 @@ npm run dev
 
 The site will be available at `http://localhost:4321/`.
 
+The first `npm run dev` or `npm run build` needs internet access: it downloads the Switzer font files from `images.gsheir.com/fonts/switzer/` into `src/assets/fonts/` (see [Fonts](#fonts)). Later runs reuse them.
+
 | Command                | Action                                                        |
 | ---------------------- | ------------------------------------------------------------- |
 | `npm run dev`          | Start the development server                                  |
@@ -60,6 +62,12 @@ _Caption, with an optional [link](https://example.com)_
 Set `draft: true` to hide a post from the built site while you work on it (drafts still show in `npm run dev`). Rename a file to `.mdx` to use components inside a post.
 
 The CV lives in `src/content/pages/cv.md`.
+
+## Fonts
+
+Text is set in [Switzer](https://www.fontshare.com/fonts/switzer) (ITF Free Font Licence), with [Fragment Mono](https://fontsource.org/fonts/fragment-mono) (OFL) for dates and code. Fragment Mono comes from npm. Switzer's licence forbids redistributing the files, so they are not in this public repository: the official `Switzer-Variable.woff2` and `Switzer-VariableItalic.woff2` are self-hosted in R2 at `images.gsheir.com/fonts/switzer/`, and `src/integrations/fonts.ts` downloads them before each dev server or build, checking each against a pinned SHA-256 checksum. The build then bundles them with the site.
+
+To update Switzer, upload the new official files to the same R2 path (unmodified: the licence forbids subsetting or converting them) and update the checksums in `src/integrations/fonts.ts`.
 
 ## Deployment
 

@@ -1,6 +1,33 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Switzer files are downloaded into src/assets/fonts before each build (see src/integrations/fonts.ts). */
+@font-face {
+  font-family: Switzer;
+  src: url("../assets/fonts/Switzer-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Switzer;
+  src: url("../assets/fonts/Switzer-VariableItalic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Arial scaled to Switzer's width and vertical metrics, so text does not shift when Switzer loads. */
+@font-face {
+  font-family: "Switzer Fallback";
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("Arimo");
+  size-adjust: 100.44%;
+  ascent-override: 97.57%;
+  descent-override: 24.89%;
+  line-gap-override: 8.96%;
+}
+
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 /* Brand palette: fixed values, available as e.g. bg-vermilion-500, text-klein-300 */
@@ -13,9 +40,13 @@
   --color-klein-500: #1532d4;
   --color-klein-600: #1028b0;
 
-  --font-sans: "Geist Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-display: "Geist Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-sans: Switzer, "Switzer Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-display: Switzer, "Switzer Fallback", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Fragment Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Tracking for display type and headings; 0em keeps the typeface's own spacing. */
+  --tracking-display: 0em;
+  --tracking-heading: 0em;
 }
 
 /* Semantic tokens that change with the theme: e.g. bg-surface, text-ink, text-primary */
@@ -99,11 +130,11 @@
   }
 }
 
-/* Large, tightly tracked display type for names and page titles */
+/* Large display type for names and page titles */
 @utility display {
   font-family: var(--font-display);
   font-weight: 600;
-  letter-spacing: -0.06em;
+  letter-spacing: var(--tracking-display);
   line-height: 0.88;
 }
 
@@ -127,11 +158,7 @@
   --tw-prose-td-borders: var(--line);
 
   :where(h2, h3, h4) {
-    @apply font-display font-semibold tracking-tight;
-  }
-
-  :where(h2) {
-    @apply tracking-[-0.03em];
+    @apply font-display font-semibold tracking-heading;
   }
 
   :where(a) {

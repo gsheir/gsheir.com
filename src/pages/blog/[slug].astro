@@ -85,7 +85,7 @@ const jsonLd = {
       {older ? (
         <a href={postUrl(older)} class="group border-b border-rule py-5 sm:border-b-0 sm:pr-6">
           <span class="block text-sm text-ink-subtle">← Previous</span>
-          <span class="font-medium tracking-[-0.02em] group-hover:text-primary">{older.data.title}</span>
+          <span class="font-medium tracking-heading group-hover:text-primary">{older.data.title}</span>
         </a>
       ) : (
         <span />
@@ -93,7 +93,7 @@ const jsonLd = {
       {newer && (
         <a href={postUrl(newer)} class="group py-5 sm:border-l sm:border-rule sm:pl-6 sm:text-right">
           <span class="block text-sm text-ink-subtle">Next →</span>
-          <span class="font-medium tracking-[-0.02em] group-hover:text-primary">{newer.data.title}</span>
+          <span class="font-medium tracking-heading group-hover:text-primary">{newer.data.title}</span>
         </a>
       )}
     </nav>

@@ -9,6 +9,6 @@ const { title, subtitle } = Astro.props;
 
 <section class="mx-auto max-w-6xl px-5 pt-10 pb-14 sm:px-8 sm:pt-16 sm:pb-20">
   <h1 class="display -ml-[0.04em] text-[clamp(3.5rem,11vw,8.5rem)]">{title}</h1>
-  {subtitle && <p class="mt-6 max-w-[30ch] text-xl leading-snug tracking-[-0.02em] sm:mt-8 sm:text-2xl">{subtitle}</p>}
+  {subtitle && <p class="mt-6 max-w-[30ch] text-xl leading-snug tracking-heading sm:mt-8 sm:text-2xl">{subtitle}</p>}
   <slot />
 </section>

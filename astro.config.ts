@@ -7,13 +7,14 @@ import rehypeExternalLinks from "rehype-external-links";
 import rehypeSlug from "rehype-slug";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
+import selfHostedFonts from "./src/integrations/fonts";
 import siteChecks from "./src/integrations/site-checks";
 import rehypeFigures from "./src/plugins/rehype-figures";
 
 export default defineConfig({
   site: "https://gsheir.com",
   trailingSlash: "ignore",
-  integrations: [mdx(), siteChecks()],
+  integrations: [selfHostedFonts(), mdx(), siteChecks()],
   markdown: {
     processor: unified({
       remarkPlugins: [remarkAlert],

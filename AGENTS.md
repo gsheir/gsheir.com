@@ -33,6 +33,7 @@ This is a static site built with [Astro](https://docs.astro.build), TypeScript (
 - `src/plugins/rehype-figures.ts` – turns image paragraphs into figures with captions.
 - `src/redirects.ts` – permanent redirects. Generates `redirects.caddy` (Railway) and `dist/_redirects` (Cloudflare).
 - `src/integrations/site-checks.ts` – post-build redirect generation and link checks.
+- `src/integrations/fonts.ts` – downloads the self-hosted Switzer files before each dev server or build.
 - `Dockerfile.web`, `Caddyfile`, and `railway.json` – Railway deployment.
 
 # Writing posts
@@ -47,8 +48,9 @@ Posts are plain Markdown by default. Only use MDX (`.mdx`) when a post needs a c
 
 # Styling
 
-The site uses a flat, Swiss-inspired style: large tightly tracked type, solid colour panels, rules to divide content, and no gradients, shadows or rounded containers. Buttons may be pill-shaped; everything else is square. Hover states change colour instantly, without transitions.
+The site uses a flat, Swiss-inspired style: large type, solid colour panels, rules to divide content, and no gradients, shadows or rounded containers. Buttons may be pill-shaped; everything else is square. Hover states change colour instantly, without transitions.
 
 - Use Tailwind utilities with the theme tokens in `src/styles/global.css` rather than hard-coded colours: `bg-surface`, `bg-surface-alt`, `bg-panel`, `text-on-panel`, `text-ink`, `text-ink-muted`, `text-ink-subtle`, `text-primary` (vermilion), `text-accent` (Klein blue), `border-rule` (strong dividers) and `border-line` (subtle borders), plus the brand scales `vermilion` and `klein`.
-- Geist is the only typeface, with Geist Mono for dates. Use the `display` utility for names and page titles.
+- Switzer is the only typeface, with Fragment Mono for dates and code. Use the `display` utility for names and page titles, and the `tracking-display` and `tracking-heading` tokens rather than arbitrary letter-spacing.
+- Switzer's licence forbids redistribution, so its files are never committed: `src/integrations/fonts.ts` downloads them from `images.gsheir.com/fonts/switzer/` into `src/assets/fonts/` (gitignored) and checks them against pinned checksums. Never subset, convert, or rename them.
 - Dark mode is driven by `data-theme="dark"` on `<html>`: a black background with off-white text. The theme-aware tokens switch automatically; use the `dark:` variant only when needed.

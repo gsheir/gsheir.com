@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# Self-hosted fonts, downloaded at build time (see src/integrations/fonts.ts)
+src/assets/fonts/
+
 # Build output
 dist/
 .astro/
