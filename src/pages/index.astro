@@ -44,7 +44,7 @@ const sectionGrid = "grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] sm:ga
             <p class="font-mono text-xs">
               {formatDate(post.data.pubDate, "short")} · {readingTime(post.body)} min
             </p>
-            <h3 class="text-xl leading-snug font-medium tracking-heading sm:text-2xl">
+            <h3 class="text-xl leading-snug font-semibold tracking-heading sm:text-2xl">
               <a
                 href={postUrl(post)}
                 class="decoration-2 underline-offset-4 after:absolute after:inset-0 group-hover:underline"
@@ -63,7 +63,7 @@ const sectionGrid = "grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] sm:ga
   </section>
 
   <section class:list={["mx-auto max-w-6xl px-5 pt-20 sm:px-8 sm:pt-28", sectionGrid]}>
-    <h2 class="text-base font-medium">Projects</h2>
+    <h2 class="text-base font-semibold">Projects</h2>
     <div class="grid items-baseline gap-2 border-y border-rule py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)_auto] sm:gap-8">
       <h3 class="text-2xl font-semibold tracking-heading">XML Translator</h3>
       <p class="text-ink-muted">A tool to translate hockey XML event data.</p>
@@ -74,7 +74,7 @@ const sectionGrid = "grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,3fr)] sm:ga
   </section>
 
   <section id="contact" class:list={["mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28", sectionGrid]}>
-    <h2 class="text-base font-medium">Let’s chat</h2>
+    <h2 class="text-base font-semibold">Let’s chat</h2>
     <ul class="flex flex-wrap gap-x-[5vw] gap-y-2">
       <li>
         <a href={site.links.github} class="display text-[clamp(3rem,8.5vw,6rem)] hover:text-primary">

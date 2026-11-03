@@ -133,7 +133,7 @@
 /* Large display type for names and page titles */
 @utility display {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: var(--tracking-display);
   line-height: 0.88;
 }
